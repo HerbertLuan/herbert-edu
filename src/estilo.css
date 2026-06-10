@@ -235,8 +235,139 @@ a { color: inherit; text-decoration: none; }
 }
 .qr-fechar:hover { color: var(--ink); }
 
+/* ---------- Login do jogador ---------- */
+.login-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: login-aparece 0.25s ease;
+}
+@keyframes login-aparece { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.login-card.logado {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+}
+.login-ola { font-size: 1.05rem; }
+.login-sair {
+  font-family: inherit; font-weight: 700; font-size: 0.9rem;
+  color: var(--muted); background: none; border: none; cursor: pointer;
+  padding: 6px 10px; border-radius: 999px; transition: background 0.15s, color 0.15s;
+}
+.login-sair:hover { background: #F1F4FA; color: var(--ink); }
+
+.login-eyebrow {
+  font-size: 0.82rem; font-weight: 800; letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.login-linha { display: flex; gap: 10px; }
+.login-input {
+  flex: 1; min-width: 0;
+  font-family: inherit; font-size: 1rem; color: var(--ink);
+  padding: 12px 16px;
+  border: 1.5px solid var(--line); border-radius: 12px;
+  background: #FBFCFF; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.login-input:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+.login-btn {
+  flex: 0 0 auto;
+  font-family: inherit; font-weight: 800; font-size: 0.95rem; color: #fff;
+  padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  transition: transform 0.15s, opacity 0.15s;
+}
+.login-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.login-btn:disabled { opacity: 0.6; cursor: default; }
+.login-erro { color: var(--warn); font-size: 0.9rem; font-weight: 600; }
+.login-trocar {
+  align-self: flex-start;
+  font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  color: var(--muted); background: none; border: none; cursor: pointer; padding: 2px;
+}
+.login-trocar:hover { color: var(--accent); }
+
+/* ---------- Ranking ---------- */
+.ranking { margin: 28px 0 8px; }
+.ranking-titulo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 16px; }
+.ranking-carregando, .ranking-vazio { color: var(--muted); font-size: 0.98rem; }
+
+/* pódio: 2º | 1º | 3º com alturas diferentes */
+.podio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+.podio-lugar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 16px 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  text-align: center;
+}
+.podio-lugar.lugar-1 {
+  order: 2;
+  border-color: var(--gold);
+  background: linear-gradient(180deg, var(--gold-bg, #FBF1DC), #fff);
+  padding-top: 26px;
+}
+.podio-lugar.lugar-2 { order: 1; }
+.podio-lugar.lugar-3 { order: 3; }
+.podio-medalha { font-size: 1.8rem; line-height: 1; }
+.podio-lugar.lugar-1 .podio-medalha { font-size: 2.2rem; }
+.podio-nome {
+  font-weight: 700; font-size: 0.98rem; letter-spacing: -0.2px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.podio-pts { font-weight: 800; color: var(--gold); font-size: 0.95rem; }
+.podio-lugar.eu { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* lista do 4º em diante */
+.rank-lista { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.rank-linha {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--line); border-radius: 12px;
+  padding: 11px 16px;
+}
+.rank-pos { font-weight: 800; color: var(--muted); min-width: 34px; }
+.rank-nome { flex: 1; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-pts { font-weight: 800; color: var(--accent); }
+.rank-linha.rank-eu { border-color: var(--accent); background: #F4F8FF; }
+
+.ranking-eu:empty { display: none; }
+.rank-minha-pos {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 0.95rem; color: var(--muted);
+  background: #F4F8FF; border: 1px dashed var(--accent);
+  border-radius: 12px; padding: 10px 16px;
+}
+.rank-minha-pos b { color: var(--accent); }
+
 /* ---------- Responsivo (celular do aluno) ---------- */
 @media (max-width: 480px) {
   .topo { padding: 40px 18px 48px; }
   .aulas-grade { grid-template-columns: 1fr; }
+  .login-linha { flex-direction: column; }
+  .login-btn { width: 100%; }
+  .podio-nome { font-size: 0.88rem; }
+  .podio-medalha { font-size: 1.5rem; }
+  .podio-lugar.lugar-1 .podio-medalha { font-size: 1.9rem; }
 }

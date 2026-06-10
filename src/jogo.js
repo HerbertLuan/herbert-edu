@@ -3,6 +3,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { db, iniciarAnalytics } from "./firebase.js";
 import { iniciarQuiz } from "./lib/quiz.js";
+import { registrarPontuacao } from "./lib/jogadores.js";
 
 iniciarAnalytics();
 
@@ -68,8 +69,11 @@ async function carregar() {
     container: palco,
     dados: perguntas,
     jogoId: id,
-    // Gancho para o futuro ranking — por ora, só registra no console.
-    aoTerminar: (resultado) => console.debug("Resultado:", resultado),
+    // Sobe a pontuação pro ranking se houver aluno logado (no-op se não).
+    // Falha de rede não pode quebrar a tela final.
+    aoTerminar: (resultado) => {
+      registrarPontuacao(resultado.jogoId, resultado.pontos).catch(console.error);
+    },
   });
 }
 

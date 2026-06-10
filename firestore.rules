@@ -26,6 +26,31 @@ service cloud.firestore {
       allow write: if ehAdmin();
     }
 
+    // Jogadores do ranking: login nome+senha sem servidor. Leitura pública
+    // (o ranking precisa). A senha vive só como hash. As regras validam o
+    // FORMATO da escrita — é higiene, não blindagem: como o hash é legível,
+    // não há proteção real contra replay. Coerente com a decisão de design.
+    match /jogadores/{slug} {
+      allow read: if true;
+
+      // Cadastro: só campos bem formados, total começando em 0+.
+      allow create: if request.resource.data.nome is string
+        && request.resource.data.nome.size() > 0
+        && request.resource.data.senhaHash is string
+        && request.resource.data.salt is string
+        && request.resource.data.melhores is map
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0;
+
+      // Atualização (nova pontuação): credencial e nome não mudam.
+      allow update: if request.resource.data.senhaHash == resource.data.senhaHash
+        && request.resource.data.salt == resource.data.salt
+        && request.resource.data.nome == resource.data.nome
+        && request.resource.data.melhores is map
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0;
+    }
+
     // Tudo o que não foi declarado fica bloqueado por padrão.
     match /{document=**} {
       allow read, write: if false;
