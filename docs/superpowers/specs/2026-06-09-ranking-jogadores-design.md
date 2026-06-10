@@ -69,6 +69,9 @@ Fonte única da identidade. Não conhece telas — só dados e sessão. API:
   melhores[jogoId]` atual, atualiza `melhores[jogoId]`, recomputa `total`,
   grava `atualizadoEm`. Sem sessão, é no-op (retorna sem erro).
 - `topRanking(limite = 12)` → lê `jogadores` ordenado por `total` desc.
+- `posicaoDe(total)` → conta quantos jogadores têm `total` maior (consulta
+  `where total > X` com `getCountFromServer`) e retorna `contagem + 1`. Usada só
+  quando o aluno logado ficou fora do top — uma contagem barata, não baixa docs.
 
 **Hash:** Web Crypto `crypto.subtle.digest("SHA-256", salt+senha)`, hex. Salt
 gerado com `crypto.getRandomValues`. Sem dependências novas.
@@ -106,9 +109,12 @@ Entre o card de login e o catálogo de minigames. Lê `topRanking()` no carregar
 
 - **Pódio:** top 3 em destaque (ouro/prata/bronze), com nome e total.
 - **Lista:** 4º em diante, numerada e enxuta (posição · nome · total).
-- **Destaque do aluno logado:** se o jogador da sessão está no top, sua linha
-  fica realçada. (Mostrar a posição de quem ficou fora do top é desejável, mas
-  fica como melhoria futura — não bloqueia esta entrega.)
+- **Destaque do aluno logado:** se o jogador da sessão está no top 12, sua linha
+  fica realçada.
+- **Aluno fora do top 12:** se o jogador logado não aparece na lista, mostro
+  abaixo dela uma linha com a posição dele — ex.: "Sua posição: 30º · 1270 pts"
+  —, calculada via `posicaoDe(total)`. Só aparece quando há sessão e o aluno
+  ficou de fora do top.
 - **Vazio:** se ninguém pontuou ainda, mensagem amigável ("Seja o primeiro!").
 
 ## Regras do Firestore
@@ -133,7 +139,6 @@ de segurança acima.
 - Recuperação/troca de senha.
 - Ranking por jogo (só o geral; pode vir depois).
 - Avatares, badges, histórico de partidas.
-- Posição do aluno fora do top (melhoria futura).
 - Anti-cheat de verdade (exige servidor).
 
 ## Arquivos afetados
