@@ -12,6 +12,8 @@
 //  - aoTerminar: callback opcional (resultado) — gancho para ranking futuro
 // =====================================================================
 
+import { destravarAudio, tocarSom, somLigado, alternarSom } from "./som.js";
+
 const PONTOS_BASE = 100;
 const BONUS_VELOCIDADE = 50; // máximo, proporcional ao tempo restante
 const BONUS_STREAK = 10; // por acerto seguido, até 5
@@ -108,7 +110,22 @@ export function iniciarQuiz({ container, dados, jogoId, aoTerminar }) {
 
   // Sorteia a amostra da partida (quando há sorteio), embaralha as alternativas
   // de cada questão e zera o placar.
+  // Botão 🔊/🔇 — estado global persistido, compartilhado pelos minigames.
+  function botaoSomHtml(canto = false) {
+    return `<button class="quiz-som${canto ? " quiz-som-canto" : ""}" type="button"
+      aria-label="Ligar ou desligar o som">${somLigado() ? "🔊" : "🔇"}</button>`;
+  }
+  function ligarBotaoSom() {
+    app.querySelectorAll(".quiz-som").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        btn.textContent = alternarSom() ? "🔊" : "🔇";
+        destravarAudio(); // ligar o som é um gesto: aproveita pra destravar
+      });
+    });
+  }
+
   function novaPartida() {
+    destravarAudio(); // sempre chega aqui por clique (Começar / Jogar de novo)
     const amostra = usaSorteio ? embaralhar(pool.slice()).slice(0, nSortear) : pool.slice();
     questoes = amostra.map(prepararQuestao);
     estado.i = 0; estado.pontos = 0; estado.acertos = 0; estado.streak = 0; estado.maiorStreak = 0;
@@ -131,8 +148,10 @@ export function iniciarQuiz({ container, dados, jogoId, aoTerminar }) {
         </ul>
         ${melhor ? `<p class="quiz-melhor">🏆 Seu melhor: <b>${melhor}</b></p>` : ""}
         <button class="quiz-btn quiz-btn-primario" id="quiz-comecar">Começar →</button>
+        ${botaoSomHtml(true)}
       </section>`;
     app.querySelector("#quiz-comecar").addEventListener("click", novaPartida);
+    ligarBotaoSom();
   }
 
   // ---- tela de questão ----
@@ -159,6 +178,7 @@ export function iniciarQuiz({ container, dados, jogoId, aoTerminar }) {
                 <circle class="arco" cx="30" cy="30" r="26"/></svg>
               <b class="quiz-seg">${Math.ceil(tempoRestante)}</b>
             </span>
+            ${botaoSomHtml()}
           </div>
         </header>
         <p class="quiz-enunciado">${escapar(q.enunciado)}</p>
@@ -169,6 +189,7 @@ export function iniciarQuiz({ container, dados, jogoId, aoTerminar }) {
     app.querySelectorAll(".quiz-opcao").forEach((btn) => {
       btn.addEventListener("click", () => responder(Number(btn.dataset.idx)));
     });
+    ligarBotaoSom();
     atualizarRing();
     iniciarTimer();
   }
@@ -202,8 +223,10 @@ export function iniciarQuiz({ container, dados, jogoId, aoTerminar }) {
       const bonusStk = Math.min(estado.streak, 5) * BONUS_STREAK;
       ganho = PONTOS_BASE + bonusVel + bonusStk;
       estado.pontos += ganho;
+      tocarSom("acerto", { streak: estado.streak });
     } else {
       estado.streak = 0;
+      tocarSom("erro");
     }
 
     app.querySelectorAll(".quiz-opcao").forEach((btn) => {
@@ -245,6 +268,7 @@ export function iniciarQuiz({ container, dados, jogoId, aoTerminar }) {
     const recorde = estado.pontos > melhorAnterior;
     if (recorde) gravarMelhor(chaveMelhor, estado.pontos);
     const melhor = Math.max(melhorAnterior, estado.pontos);
+    tocarSom(recorde ? "recorde" : "fim");
 
     const resultado = {
       jogoId: jogoId || null,
@@ -268,8 +292,10 @@ export function iniciarQuiz({ container, dados, jogoId, aoTerminar }) {
           <button class="quiz-btn quiz-btn-primario" id="quiz-denovo">Jogar de novo</button>
           <a class="quiz-btn" href="/jogos.html">Voltar aos jogos</a>
         </div>
+        ${botaoSomHtml(true)}
       </section>`;
     app.querySelector("#quiz-denovo").addEventListener("click", novaPartida);
+    ligarBotaoSom();
 
     if (typeof aoTerminar === "function") {
       try { aoTerminar(resultado); } catch (e) { console.error("aoTerminar falhou:", e); }

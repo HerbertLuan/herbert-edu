@@ -325,6 +325,18 @@
 .sin-acu-num { font-size: 0.85rem; font-weight: 700; color: var(--s-muted); text-align: right; }
 .sin-acoes { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
+/* ---------- botão de som ---------- */
+.sin-som {
+  width: 38px; height: 38px; flex: 0 0 auto;
+  font-size: 1.05rem; line-height: 1;
+  background: #fff; border: 1.5px solid var(--s-line); border-radius: 50%;
+  cursor: pointer; padding: 0;
+  transition: border-color 0.12s, transform 0.08s;
+}
+.sin-som:hover { border-color: var(--s-accent); }
+.sin-som:active { transform: scale(0.94); }
+.sin-som-canto { position: absolute; top: 14px; right: 12px; }
+
 /* ---------- telas estreitas ---------- */
 @media (max-width: 420px) {
   .sin-arena { min-height: 330px; }

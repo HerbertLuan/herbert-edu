@@ -15,6 +15,7 @@
 //  - aoTerminar: callback opcional (resultado) — gancho do ranking
 // =====================================================================
 import "./sinais.css";
+import { destravarAudio, tocarSom, somLigado, alternarSom } from "./som.js";
 
 // ---------------------------------------------------------------------
 // Regras do jogo
@@ -346,14 +347,32 @@ export function iniciarSinais({ container, dados, jogoId, aoTerminar }) {
         </ul>
         ${melhor ? `<p class="sin-melhor">🏆 Seu melhor: <b>${melhor}</b></p>` : ""}
         <button class="sin-btn sin-btn-primario" id="sin-comecar">Começar →</button>
+        ${botaoSomHtml(true)}
       </section>`;
     app.querySelector("#sin-comecar").addEventListener("click", novaPartida);
+    ligarBotaoSom();
   }
 
   // =====================================================================
   // Partida
   // =====================================================================
+  // Botão 🔊/🔇 — estado global persistido, compartilhado pelos minigames.
+  // "canto" = posição absoluta no topo (abertura/final); sem canto, vive no HUD.
+  function botaoSomHtml(canto = false) {
+    return `<button class="sin-som${canto ? " sin-som-canto" : ""}" type="button"
+      aria-label="Ligar ou desligar o som">${somLigado() ? "🔊" : "🔇"}</button>`;
+  }
+  function ligarBotaoSom() {
+    app.querySelectorAll(".sin-som").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        btn.textContent = alternarSom() ? "🔊" : "🔇";
+        destravarAudio(); // ligar o som é um gesto: aproveita pra destravar
+      });
+    });
+  }
+
   function novaPartida() {
+    destravarAudio(); // sempre chega aqui por clique (Começar / Jogar de novo)
     gerador = criarGerador();
     estado.tempo = duracao;
     estado.pontos = 0; estado.streak = 0; estado.maiorStreak = 0;
@@ -375,6 +394,7 @@ export function iniciarSinais({ container, dados, jogoId, aoTerminar }) {
             <span class="sin-nivel-nome">${NIVEIS[0].nome}</span>
           </div>
           <span class="sin-pontos">0 pts</span>
+          ${botaoSomHtml()}
         </header>
         <div class="sin-arena">
           <span class="sin-lado esq"></span>
@@ -391,6 +411,7 @@ export function iniciarSinais({ container, dados, jogoId, aoTerminar }) {
     app.querySelectorAll(".sin-btn-lado").forEach((btn) => {
       btn.addEventListener("click", () => responder(Number(btn.dataset.lado)));
     });
+    ligarBotaoSom();
 
     montarNovaCarta();
     iniciarTimer();
@@ -569,6 +590,7 @@ export function iniciarSinais({ container, dados, jogoId, aoTerminar }) {
     estado.porAlvo[alvo].ok += 1;
     const nivelDepois = nivelIdxDe(estado.streak);
 
+    tocarSom("acerto", { streak: estado.streak });
     vibrar(30);
     flutuarPontos(`+${ganho}`);
     atualizarPlacar();
@@ -598,6 +620,7 @@ export function iniciarSinais({ container, dados, jogoId, aoTerminar }) {
     estado.erros += 1;
     estado.streak = 0;
     estado.tempo = Math.max(0, estado.tempo - PENALIDADE_ERRO);
+    tocarSom("erro");
     vibrar(90);
     atualizarPlacar();
     atualizarRelogio();
@@ -662,6 +685,7 @@ export function iniciarSinais({ container, dados, jogoId, aoTerminar }) {
     banner.className = "sin-banner";
     banner.innerHTML = `COMBO <b>×${nivel.mult}</b><small>${nivel.nome}</small>`;
     jogo.appendChild(banner);
+    tocarSom("combo");
     vibrar([40, 40, 40]);
     setTimeout(() => banner.remove(), REDUZ_MOVIMENTO ? 700 : 950);
   }
@@ -679,6 +703,7 @@ export function iniciarSinais({ container, dados, jogoId, aoTerminar }) {
     const recorde = estado.pontos > melhorAnterior;
     if (recorde) gravarMelhor(chaveMelhor, estado.pontos);
     const melhor = Math.max(melhorAnterior, estado.pontos);
+    tocarSom(recorde ? "recorde" : "fim");
 
     const acuracia = Object.entries(estado.porAlvo)
       .filter(([, v]) => v.total > 0)
@@ -704,8 +729,10 @@ export function iniciarSinais({ container, dados, jogoId, aoTerminar }) {
           <button class="sin-btn sin-btn-primario" id="sin-denovo">Jogar de novo</button>
           <a class="sin-btn" href="/jogos.html">Voltar aos jogos</a>
         </div>
+        ${botaoSomHtml(true)}
       </section>`;
     app.querySelector("#sin-denovo").addEventListener("click", novaPartida);
+    ligarBotaoSom();
     animarPlacar(estado.pontos);
 
     const resultado = {
