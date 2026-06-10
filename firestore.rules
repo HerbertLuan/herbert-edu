@@ -20,6 +20,12 @@ service cloud.firestore {
       allow write: if ehAdmin();
     }
 
+    // Minigames: catálogo público (aluno lê). Só o admin/script escreve.
+    match /jogos/{jogoId} {
+      allow read: if true;
+      allow write: if ehAdmin();
+    }
+
     // Tudo o que não foi declarado fica bloqueado por padrão.
     match /{document=**} {
       allow read, write: if false;

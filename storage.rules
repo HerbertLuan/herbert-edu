@@ -19,6 +19,12 @@ service firebase.storage {
       allow write: if ehAdmin();
     }
 
+    // Perguntas dos minigames (JSON): leitura pública, escrita só pelo admin.
+    match /jogos/{arquivo=**} {
+      allow read: if true;
+      allow write: if ehAdmin();
+    }
+
     match /{tudo=**} {
       allow read, write: if false;
     }

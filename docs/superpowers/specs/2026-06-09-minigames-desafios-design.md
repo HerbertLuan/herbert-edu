@@ -81,6 +81,9 @@ Um arquivo por jogo, com envelope comum pensado para servir os cinco formatos de
   "formato": "quiz",
   "titulo": "Quiz relâmpago — Quadráticas",
   "tempoPorQuestao": 20,             // segundos; opcional (default: 20s se omitido)
+  "sortear": 10,                     // opcional: sorteia N questões (em ordem
+                                     // aleatória) de um acervo maior a cada partida.
+                                     // Ausente ou ≥ total ⇒ usa todas, na ordem dada.
   "questoes": [
     {
       "enunciado": "A parábola y = x² − 4x + 3 corta o eixo x em:",
@@ -115,6 +118,13 @@ iniciarQuiz({ container, dados, aoTerminar });
 2. **Loop de questões** — para cada questão: enunciado + opções clicáveis, cronômetro circular. O aluno toca numa opção (ou o tempo zera = erra).
 3. **Feedback imediato** — verde na correta, vermelho na escolhida-errada, e a `explicacao` abaixo. Botão "Próxima" (ou avança sozinho após ~2s). É o que faz o jogo *ensinar*, não só medir.
 4. **Tela final** — pontuação, nº de acertos, maior sequência (streak), "seu melhor" lido do `localStorage`. Botões "Jogar de novo" e "Voltar aos jogos".
+
+### Variedade e antirrepetição
+
+- **Sorteio por partida:** com o campo `sortear: N`, cada partida usa uma amostra aleatória de N questões (em ordem embaralhada, Fisher-Yates) de um acervo maior. "Jogar de novo" re-sorteia. A abertura informa "N questões (sorteadas de M)".
+- **Embaralhamento de alternativas (blindagem):** a cada partida (e a cada "jogar de novo"), o motor embaralha as opções de cada questão (Fisher-Yates) e remapeia o índice da correta. A posição da resposta certa é sempre aleatória no jogo, independentemente de como a questão foi escrita no JSON — mesmo uma questão com `correta: 0` fixa aparece em posições variadas. O acervo (`pool`) nunca é mutado: cada partida trabalha sobre cópias.
+- **Resposta correta distribuída na autoria:** como reforço, as questões já são escritas com a alternativa correta espalhada entre as posições (A/B/C/D). Com o embaralhamento no motor isso virou redundância saudável, não a única linha de defesa.
+- **Acervo inicial:** `quiz-quadraticas.json` traz 30 questões cobrindo subtemas variados (raízes, vértice, concavidade, discriminante, soma/produto, interceptos, aplicações), com `sortear: 10`.
 
 ### Pontuação (local nesta fase)
 

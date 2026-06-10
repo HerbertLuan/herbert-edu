@@ -1,0 +1,188 @@
+{
+  "formato": "quiz",
+  "titulo": "Quiz relâmpago — Quadráticas",
+  "tempoPorQuestao": 20,
+  "sortear": 10,
+  "questoes": [
+    {
+      "enunciado": "As raízes de x² − 5x + 6 = 0 são:",
+      "opcoes": ["x = 1 e x = 6", "x = 2 e x = 3", "x = −2 e x = −3", "x = 5 e x = 6"],
+      "correta": 1,
+      "explicacao": "Soma 5 e produto 6 ⇒ raízes 2 e 3."
+    },
+    {
+      "enunciado": "As raízes de x² − 7x + 12 = 0 são:",
+      "opcoes": ["x = 3 e x = 4", "x = 2 e x = 6", "x = −3 e x = −4", "x = 1 e x = 12"],
+      "correta": 0,
+      "explicacao": "Soma 7 e produto 12 ⇒ raízes 3 e 4."
+    },
+    {
+      "enunciado": "A parábola y = x² − 4x + 3 corta o eixo x em:",
+      "opcoes": ["x = 0 e x = 4", "x = −1 e x = −3", "x = 1 e x = 3", "Não corta o eixo x"],
+      "correta": 2,
+      "explicacao": "Bhaskara (ou soma e produto): as raízes são 1 e 3."
+    },
+    {
+      "enunciado": "As raízes de x² + x − 6 = 0 são:",
+      "opcoes": ["x = 2 e x = −3", "x = −2 e x = 3", "x = 1 e x = 6", "x = 3 e x = 2"],
+      "correta": 0,
+      "explicacao": "Fatorando: (x + 3)(x − 2) = 0 ⇒ x = −3 ou x = 2."
+    },
+    {
+      "enunciado": "Quais as soluções de x² − 9 = 0?",
+      "opcoes": ["x = ±3", "x = 3 apenas", "x = ±9", "Não tem raiz real"],
+      "correta": 0,
+      "explicacao": "x² = 9 ⇒ x = 3 ou x = −3."
+    },
+    {
+      "enunciado": "A soma das raízes de 2x² − 10x + 8 = 0 é:",
+      "opcoes": ["−5", "4", "5", "10"],
+      "correta": 2,
+      "explicacao": "Soma das raízes = −b/a = 10/2 = 5."
+    },
+    {
+      "enunciado": "O produto das raízes de x² − 5x + 6 = 0 é:",
+      "opcoes": ["6", "5", "−6", "−5"],
+      "correta": 0,
+      "explicacao": "Produto das raízes = c/a = 6/1 = 6 (raízes 2 e 3)."
+    },
+    {
+      "enunciado": "A soma das raízes de x² − 7x + 10 = 0 é:",
+      "opcoes": ["10", "−7", "7", "3"],
+      "correta": 2,
+      "explicacao": "Soma das raízes = −b/a = 7 (raízes 2 e 5)."
+    },
+    {
+      "enunciado": "O produto das raízes de x² + 2x − 8 = 0 é:",
+      "opcoes": ["8", "2", "−2", "−8"],
+      "correta": 3,
+      "explicacao": "Produto das raízes = c/a = −8 (raízes 2 e −4)."
+    },
+    {
+      "enunciado": "Na função f(x) = x² − 6x + 5, a abscissa do vértice é:",
+      "opcoes": ["x = −3", "x = 3", "x = 6", "x = 5"],
+      "correta": 1,
+      "explicacao": "x do vértice = −b/2a = 6/2 = 3."
+    },
+    {
+      "enunciado": "Na função f(x) = x² − 4x, a abscissa do vértice é:",
+      "opcoes": ["x = 0", "x = 4", "x = 2", "x = −2"],
+      "correta": 2,
+      "explicacao": "x do vértice = −b/2a = 4/2 = 2."
+    },
+    {
+      "enunciado": "O valor mínimo de f(x) = x² − 4x + 7 é:",
+      "opcoes": ["7", "4", "−4", "3"],
+      "correta": 3,
+      "explicacao": "Mínimo no vértice (x = 2): f(2) = 4 − 8 + 7 = 3."
+    },
+    {
+      "enunciado": "O valor máximo de f(x) = −x² + 6x é:",
+      "opcoes": ["3", "6", "9", "12"],
+      "correta": 2,
+      "explicacao": "Máximo no vértice (x = 3): f(3) = −9 + 18 = 9."
+    },
+    {
+      "enunciado": "A concavidade da parábola y = 2x² − 8x + 6 está voltada para:",
+      "opcoes": ["Cima", "Baixo", "Depende de x", "É uma reta"],
+      "correta": 0,
+      "explicacao": "Como a = 2 > 0, a concavidade é para cima."
+    },
+    {
+      "enunciado": "A concavidade da parábola y = −3x² + 2x está voltada para:",
+      "opcoes": ["Cima", "Baixo", "Depende de x", "É uma reta"],
+      "correta": 1,
+      "explicacao": "Como a = −3 < 0, a concavidade é para baixo."
+    },
+    {
+      "enunciado": "Quantas raízes reais tem a equação x² + 1 = 0?",
+      "opcoes": ["Nenhuma", "Uma", "Duas", "Infinitas"],
+      "correta": 0,
+      "explicacao": "Δ = 0 − 4 = −4 < 0 ⇒ não há raízes reais."
+    },
+    {
+      "enunciado": "Qual o discriminante (Δ) de x² − 6x + 9 = 0?",
+      "opcoes": ["Δ = 0", "Δ = 36", "Δ = −36", "Δ = 72"],
+      "correta": 0,
+      "explicacao": "Δ = b² − 4ac = 36 − 36 = 0."
+    },
+    {
+      "enunciado": "Para que x² − 6x + k = 0 tenha duas raízes reais e iguais, k deve ser:",
+      "opcoes": ["6", "3", "9", "0"],
+      "correta": 2,
+      "explicacao": "Raízes iguais ⇒ Δ = 0: 36 − 4k = 0 ⇒ k = 9."
+    },
+    {
+      "enunciado": "Para que x² + 4x + k = 0 tenha uma única raiz (dupla), k deve ser:",
+      "opcoes": ["2", "4", "8", "16"],
+      "correta": 1,
+      "explicacao": "Δ = 16 − 4k = 0 ⇒ k = 4."
+    },
+    {
+      "enunciado": "Onde a parábola y = x² − 9 corta o eixo y?",
+      "opcoes": ["y = −9", "y = 9", "y = 0", "y = 3"],
+      "correta": 0,
+      "explicacao": "No eixo y, x = 0: y = 0 − 9 = −9."
+    },
+    {
+      "enunciado": "Onde a parábola y = x² − 5x + 6 corta o eixo y?",
+      "opcoes": ["5", "0", "−6", "6"],
+      "correta": 3,
+      "explicacao": "No eixo y, x = 0: y = 6 (o termo independente)."
+    },
+    {
+      "enunciado": "Quantas raízes reais distintas tem x² − 6x + 9 = 0?",
+      "opcoes": ["0", "1", "2", "Infinitas"],
+      "correta": 1,
+      "explicacao": "Δ = 0 ⇒ uma raiz dupla (x = 3)."
+    },
+    {
+      "enunciado": "Quantas raízes reais tem x² − 4x + 5 = 0?",
+      "opcoes": ["3", "2", "1", "0"],
+      "correta": 3,
+      "explicacao": "Δ = 16 − 20 = −4 < 0 ⇒ nenhuma raiz real."
+    },
+    {
+      "enunciado": "Um objeto tem altura h(t) = −5t² + 20t (metros). A altura máxima é:",
+      "opcoes": ["15 m", "25 m", "40 m", "20 m"],
+      "correta": 3,
+      "explicacao": "Máximo em t = −b/2a = 2 s: h(2) = −20 + 40 = 20 m."
+    },
+    {
+      "enunciado": "Um projétil tem altura h(t) = −5t² + 30t (metros). A altura máxima é:",
+      "opcoes": ["30 m", "60 m", "45 m", "90 m"],
+      "correta": 2,
+      "explicacao": "Máximo em t = 3 s: h(3) = −45 + 90 = 45 m."
+    },
+    {
+      "enunciado": "Para h(t) = −5t² + 20t, em que instante o objeto volta ao chão (h = 0)?",
+      "opcoes": ["t = 4 s", "t = 2 s", "t = 5 s", "t = 20 s"],
+      "correta": 0,
+      "explicacao": "−5t² + 20t = 0 ⇒ t(−5t + 20) = 0 ⇒ t = 0 ou t = 4 s."
+    },
+    {
+      "enunciado": "Quando a > 0, o vértice da parábola é um ponto de:",
+      "opcoes": ["Máximo", "Mínimo", "Inflexão", "Sela"],
+      "correta": 1,
+      "explicacao": "Concavidade para cima ⇒ o vértice é o ponto de mínimo."
+    },
+    {
+      "enunciado": "As raízes de x² − 2x − 3 = 0 são:",
+      "opcoes": ["x = 1 e x = 3", "x = 3 e x = −1", "x = −3 e x = 1", "x = 2 e x = 3"],
+      "correta": 1,
+      "explicacao": "Fatorando: (x − 3)(x + 1) = 0 ⇒ x = 3 ou x = −1."
+    },
+    {
+      "enunciado": "O produto das raízes de 3x² − 12x + 9 = 0 é:",
+      "opcoes": ["12", "4", "9", "3"],
+      "correta": 3,
+      "explicacao": "Produto das raízes = c/a = 9/3 = 3 (raízes 1 e 3)."
+    },
+    {
+      "enunciado": "A soma das raízes de x² + 6x + 8 = 0 é:",
+      "opcoes": ["8", "−8", "6", "−6"],
+      "correta": 3,
+      "explicacao": "Soma das raízes = −b/a = −6 (raízes −2 e −4)."
+    }
+  ]
+}
