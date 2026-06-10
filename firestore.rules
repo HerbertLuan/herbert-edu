@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // É admin quem está autenticado e tem o custom claim admin=true
+    // (concedido via scripts/tornar-admin.mjs). O Admin SDK do script de
+    // publicação ignora estas regras.
+    function ehAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Catálogo público: qualquer aluno LÊ. Só o admin escreve (painel).
+    match /temas/{temaId} {
+      allow read: if true;
+      allow write: if ehAdmin();
+    }
+
+    match /aulas/{aulaId} {
+      allow read: if true;
+      allow write: if ehAdmin();
+    }
+
+    // Tudo o que não foi declarado fica bloqueado por padrão.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

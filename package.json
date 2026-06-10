@@ -1,0 +1,24 @@
+{
+  "name": "herbert-edu",
+  "version": "1.0.0",
+  "description": "Site de materiais de aula do preparatório ENEM (Herbert Edu)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "vite build && firebase deploy",
+    "publicar": "node scripts/publicar-aula.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^12.14.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "firebase-admin": "^13.0.0",
+    "vite": "^6.0.0"
+  }
+}

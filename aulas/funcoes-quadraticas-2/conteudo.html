@@ -1,0 +1,236 @@
+<!-- 1 — Abertura -->
+<section class="slide center">
+  <span class="eyebrow">Matemática para o ENEM · Aula 2 de 2</span>
+  <h1>Análise <span class="accent">Completa</span> & Aplicações ENEM</h1>
+  <p class="lead muted" style="max-width:44ch">Vértice, raízes, Bhaskara, discriminante — e como usar tudo isso para resolver questão rápido.</p>
+  <div>
+    <span class="chip">vértice</span>
+    <span class="chip p">máximo/mínimo</span>
+    <span class="chip">Bhaskara</span>
+    <span class="chip g">Δ e gráfico</span>
+    <span class="chip w">armadilhas</span>
+  </div>
+</section>
+
+<!-- 2 — Retomada + objetivos -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">AULA 2</span><h2>Retomada + objetivos</h2></div>
+  <div class="splitfill">
+    <div class="col">
+      <div class="card flat">
+        <h3>Recuperação ativa (Aula 1)</h3>
+        <p>Sem olhar: o que o <b>sinal de a</b> determina? Onde a parábola corta o <b>eixo y</b>?</p>
+        <p class="muted">a &gt; 0 ∪ (mínimo) · a &lt; 0 ∩ (máximo) · corta y em (0, c).</p>
+      </div>
+    </div>
+    <div class="col">
+      <h3>Hoje vamos calcular</h3>
+      <ul>
+        <li>Coordenadas do <b>vértice</b> e o valor de máximo/mínimo</li>
+        <li><b>Raízes</b> com Bhaskara e o papel do <b>discriminante Δ</b></li>
+        <li><b>Eixo de simetria</b> e atalhos para o ENEM</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3 — Vértice: fórmulas -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">VÉRTICE</span><h2>Coordenadas do vértice</h2></div>
+  <div class="grid g2">
+    <div class="card center" style="text-align:center">
+      <h3 class="accent">Coordenada x</h3>
+      <p class="boxform">x<sub>v</sub> = −b / 2a</p>
+      <p class="muted">É também o <b>eixo de simetria</b>.</p>
+    </div>
+    <div class="card center" style="text-align:center">
+      <h3 class="accent2">Coordenada y</h3>
+      <p class="boxform" style="background:#F1EAFF;border-color:#e0cdff">y<sub>v</sub> = −Δ / 4a</p>
+      <p class="muted">Atalho: ou calcule <b>f(x<sub>v</sub>)</b>.</p>
+    </div>
+  </div>
+  <div class="card flat">
+    <p><b>Dica:</b> ache <b>x<sub>v</sub></b> primeiro; depois substitua em f(x) para o <b>y<sub>v</sub></b> sem decorar a fórmula do Δ.</p>
+  </div>
+</section>
+
+<!-- 4 — Máximo e mínimo -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">MÁXIMO / MÍNIMO</span><h2>O vértice é o valor extremo</h2></div>
+  <div class="grid g2">
+    <div class="card">
+      <figure data-parabola data-a="0.6" data-b="-2.4" data-c="1" data-vertice data-rotulo="mínimo" data-cor="#137a4b" data-w="560" data-h="440"></figure>
+      <p class="figcap"><b class="good">a &gt; 0</b> → vértice é o ponto de <b>MÍNIMO</b></p>
+    </div>
+    <div class="card">
+      <figure data-parabola data-a="-0.6" data-b="2.4" data-c="-1" data-vertice data-rotulo="máximo" data-cor="#D9480F" data-w="560" data-h="440"></figure>
+      <p class="figcap"><b class="warn">a &lt; 0</b> → vértice é o ponto de <b>MÁXIMO</b></p>
+    </div>
+  </div>
+  <p class="lead"><b>No ENEM:</b> “lucro máximo”, “altura máxima”, “custo mínimo” = <b class="accent">y do vértice</b>.</p>
+</section>
+
+<!-- 5 — Eixo de simetria -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">SIMETRIA</span><h2>Eixo de simetria</h2></div>
+  <div class="splitfill" style="align-items:center">
+    <div class="col" style="flex:1.05">
+      <figure data-parabola data-a="0.5" data-b="0" data-c="-3" data-vertice data-rotulo="x = −b/2a" data-w="700" data-h="540"></figure>
+      <p class="figcap">Pontos com mesma altura ficam à mesma distância do eixo x<sub>v</sub>.</p>
+    </div>
+    <div class="col">
+      <div class="card"><p class="big accent">x = −b / 2a</p><p>Reta vertical que passa pelo vértice e espelha a parábola.</p></div>
+      <div class="card flat"><p><b>Atalho de raízes:</b> se você conhece as duas raízes, o vértice está <b>exatamente no meio</b> delas: x<sub>v</sub> = (x₁+x₂)/2.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 — Raízes & Bhaskara -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">RAÍZES</span><h2>Fórmula de Bhaskara</h2></div>
+  <div class="grid g2">
+    <div class="card center" style="text-align:center">
+      <p class="boxform">x = ( −b ± √Δ ) / 2a</p>
+      <p>com o <b>discriminante</b></p>
+      <p class="formula" style="font-size:1.3em;margin-top:10px">Δ = b² − 4ac</p>
+    </div>
+    <div class="col">
+      <div class="step"><div class="n">1</div><div>Identifique <b>a, b, c</b>.</div></div>
+      <div class="step"><div class="n">2</div><div>Calcule <b>Δ = b² − 4ac</b>.</div></div>
+      <div class="step"><div class="n">3</div><div>Aplique Bhaskara com o <b>±</b> → duas raízes.</div></div>
+      <div class="step"><div class="n">4</div><div>Confira: substitua uma raiz e veja se dá 0.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 — Discriminante x gráfico -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">Δ E O GRÁFICO</span><h2>O discriminante prevê as raízes</h2></div>
+  <div class="grid g3">
+    <div class="card center" style="text-align:center">
+      <figure data-parabola data-a="1" data-b="0" data-c="-3" data-raizes data-w="420" data-h="380"></figure>
+      <p class="figcap big good">Δ &gt; 0</p>
+      <p class="figcap">2 raízes reais — cruza o eixo x em 2 pontos.</p>
+    </div>
+    <div class="card center" style="text-align:center">
+      <figure data-parabola data-a="1" data-b="0" data-c="0" data-raizes data-w="420" data-h="380"></figure>
+      <p class="figcap big accent2">Δ = 0</p>
+      <p class="figcap">1 raiz — apenas toca o eixo x (no vértice).</p>
+    </div>
+    <div class="card center" style="text-align:center">
+      <figure data-parabola data-a="1" data-b="0" data-c="3" data-w="420" data-h="380"></figure>
+      <p class="figcap big warn">Δ &lt; 0</p>
+      <p class="figcap">Sem raiz real — não toca o eixo x.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 — Exemplo resolvido -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">EXEMPLO RESOLVIDO</span><h2>f(x) = x² − 6x + 8</h2></div>
+  <div class="splitfill">
+    <div class="col" style="flex:1.05">
+      <div class="step"><div class="n">1</div><div><b>Δ =</b> (−6)² − 4·1·8 = 36 − 32 = <b>4</b> → 2 raízes.</div></div>
+      <div class="step"><div class="n">2</div><div><b>x =</b> (6 ± √4)/2 = (6 ± 2)/2 → <b>x = 4</b> ou <b>x = 2</b>.</div></div>
+      <div class="step"><div class="n">3</div><div><b>x<sub>v</sub> =</b> −(−6)/2 = <b>3</b> (meio entre 2 e 4 ✓).</div></div>
+      <div class="step"><div class="n">4</div><div><b>y<sub>v</sub> =</b> f(3) = 9 − 18 + 8 = <b>−1</b> → mínimo.</div></div>
+    </div>
+    <div class="col">
+      <figure data-parabola data-a="1" data-b="-6" data-c="8" data-vertice data-raizes data-rotulo="(3, −1)" data-w="580" data-h="520"></figure>
+      <p class="figcap">Raízes (2,0) e (4,0); vértice (3, −1); corte y em (0, 8).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 — Problema ENEM -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">PROBLEMA · ESTILO ENEM</span><h2>Lucro de uma empresa</h2></div>
+  <div class="splitfill">
+    <div class="col" style="flex:1.05">
+      <div class="card">
+        <p class="lead">O lucro (em mil reais) por vender <b>x</b> unidades é</p>
+        <p class="formula" style="font-size:1.25em;margin:12px 0">L(x) = −x² + 40x − 300</p>
+        <p>Quantas unidades geram o <b>lucro máximo</b>? E qual é esse lucro?</p>
+      </div>
+      <div class="card flat"><p class="muted"><b>Reflexão:</b> por que faz sentido o lucro ter um teto e cair depois?</p></div>
+    </div>
+    <div class="col">
+      <div class="step"><div class="n">1</div><div><b>a = −1 &lt; 0</b> → existe máximo (vértice).</div></div>
+      <div class="step"><div class="n">2</div><div><b>x<sub>v</sub> =</b> −40/(2·−1) = <b>20 unidades</b>.</div></div>
+      <div class="step"><div class="n">3</div><div><b>L(20) =</b> −400 + 800 − 300 = <b>R$ 100 mil</b>.</div></div>
+      <div class="card" style="background:#E6F4EE;border-color:#bfe6d2"><p class="good big">Máximo: 20 unidades → R$ 100 mil.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 — Estratégias -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">ESTRATÉGIA</span><h2>Resolver rápido no ENEM</h2></div>
+  <div class="grid g2">
+    <div class="card"><h3>1. Leia a pergunta antes da função</h3><p>“Máximo/mínimo” → vértice. “Quando vale 0 / zero” → raízes.</p></div>
+    <div class="card"><h3>2. Use o sinal de a primeiro</h3><p>Elimina alternativas de cara (abre p/ cima ou baixo).</p></div>
+    <div class="card"><h3>3. Vértice no meio das raízes</h3><p>x<sub>v</sub> = (x₁+x₂)/2 evita refazer −b/2a.</p></div>
+    <div class="card"><h3>4. c é leitura direta</h3><p>Corte em y = (0, c), sem conta.</p></div>
+  </div>
+</section>
+
+<!-- 11 — Quiz: vértice -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">INTERATIVO · ATIVIDADE</span><h2>Encontre o vértice</h2></div>
+  <p class="lead">Para <b>f(x) = 2x² − 8x + 5</b>, qual é o vértice?</p>
+  <div class="quiz"
+       data-ok="Isso! x_v = 8/4 = 2 e f(2) = 8 − 16 + 5 = −3 → (2, −3). 🎉"
+       data-erro="A correta é B. x_v = −(−8)/(2·2) = 2; y_v = f(2) = 2·4 − 16 + 5 = −3 → (2, −3).">
+    <button class="opt">A) (2, 5)</button>
+    <button class="opt" data-correta>B) (2, −3)</button>
+    <button class="opt">C) (−2, 29)</button>
+    <button class="opt">D) (4, 5)</button>
+  </div>
+  <div class="feedback"></div>
+</section>
+
+<!-- 12 — Simulador raízes/Δ -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">INTERATIVO · SIMULADOR</span><h2>Δ controla as raízes</h2></div>
+  <p class="muted">Mexa em a, b e c e observe o discriminante e as raízes mudarem.</p>
+  <div data-simulador data-a="1" data-b="-2" data-c="-3"></div>
+</section>
+
+<!-- 13 — Quiz: armadilha -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">INTERATIVO · ARMADILHA CLÁSSICA</span><h2>Cuidado com a pegadinha</h2></div>
+  <p class="lead">Uma parábola tem <b>Δ &lt; 0</b> e <b>a &gt; 0</b>. Sobre f(x):</p>
+  <div class="quiz"
+       data-ok="Exato! Δ<0 (não cruza o eixo x) e a>0 (abre para cima) → a parábola fica toda acima do eixo x, logo f(x)>0 sempre. 🎉"
+       data-erro="A correta é B. Δ<0 significa nenhuma raiz real (não toca o eixo x); com a>0 a curva fica inteira acima do eixo → f(x)>0 para todo x.">
+    <button class="opt">A) Toca o eixo x em um único ponto.</button>
+    <button class="opt" data-correta>B) f(x) &gt; 0 para todo x (fica toda acima do eixo x).</button>
+    <button class="opt">C) Tem duas raízes reais distintas.</button>
+    <button class="opt">D) Abre para baixo.</button>
+  </div>
+  <div class="feedback"></div>
+</section>
+
+<!-- 14 — Resumo visual -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">RESUMO VISUAL</span><h2>Caixa de ferramentas da parábola</h2></div>
+  <div class="grid g2">
+    <div class="card"><p class="big accent">Vértice</p><p>x<sub>v</sub> = −b/2a · y<sub>v</sub> = f(x<sub>v</sub>) = −Δ/4a</p></div>
+    <div class="card"><p class="big accent2">Raízes</p><p>x = (−b ± √Δ)/2a · Δ = b² − 4ac</p></div>
+    <div class="card"><p class="big good">Δ &amp; gráfico</p><p>&gt;0: 2 raízes · =0: 1 · &lt;0: nenhuma</p></div>
+    <div class="card"><p class="big warn">Extremo</p><p>a&gt;0 → mínimo · a&lt;0 → máximo (no vértice)</p></div>
+  </div>
+</section>
+
+<!-- 15 — Encerramento -->
+<section class="slide center">
+  <span class="eyebrow">Encerramento · Aula 2</span>
+  <h2>Da <span class="accent">leitura</span> ao <span class="accent2">cálculo</span> completo</h2>
+  <div class="grid g2" style="width:100%">
+    <div class="card"><p>✓ Vértice, máximo/mínimo e eixo de simetria</p></div>
+    <div class="card"><p>✓ Bhaskara e discriminante</p></div>
+    <div class="card"><p>✓ Relação Δ ↔ número de raízes</p></div>
+    <div class="card"><p>✓ Estratégias e armadilhas do ENEM</p></div>
+  </div>
+  <p class="lead muted">Pratique: refaça os dois exemplos resolvidos sem olhar os passos. <b>Recuperação ativa</b> fixa mais que reler.</p>
+</section>

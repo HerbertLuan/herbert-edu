@@ -1,0 +1,11 @@
+node_modules/
+.firebase/
+dist/
+
+# Chave de serviço de admin — NUNCA versionar
+serviceAccountKey.json
+*.serviceAccount.json
+
+# Logs e cache
+*.log
+.DS_Store

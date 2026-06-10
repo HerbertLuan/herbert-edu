@@ -1,0 +1,268 @@
+/* =====================================================================
+   HERBERT EDU — Design System das AULAS (modo híbrido)
+   Fonte única da identidade visual das aulas. É "assada" inline em cada
+   aula publicada (autocontida / funciona offline).
+
+   Dois modos, mesma marcação:
+     • ESTUDO  (padrão)  → documento rolável e responsivo (celular)
+     • APRESENTAÇÃO       → deck 16:9 escalado para o projetor
+
+   Identidade: motivacional e energético · azul + roxo · base clara.
+   ===================================================================== */
+
+.aula {
+  --bg: #F7F9FC;
+  --ink: #16223A;
+  --muted: #5A6B86;
+  --line: #DCE3EE;
+  --card: #FFFFFF;
+  --accent: #2563EB;
+  --accent2: #7C3AED;
+  --warn: #D9480F;
+  --good: #137a4b;
+  --gold: #F59E0B;            /* pop de energia (acertos, conquistas) */
+  --grad: linear-gradient(135deg, var(--accent), var(--accent2));
+
+  /* tokens de tamanho — MODO ESTUDO (responsivo) */
+  --fs-eyebrow: .82rem;
+  --fs-h1: clamp(2rem, 7vw, 2.8rem);
+  --fs-h2: clamp(1.5rem, 5.5vw, 2rem);
+  --fs-h3: clamp(1.12rem, 4vw, 1.3rem);
+  --fs-body: clamp(1rem, 3.6vw, 1.12rem);
+  --fs-lead: clamp(1.1rem, 4vw, 1.35rem);
+  --fs-big: clamp(1.2rem, 5vw, 1.5rem);
+  --fs-formula: clamp(1.5rem, 7vw, 2.1rem);
+  --pad-slide: 40px 0;
+  --gap: 20px;
+
+  color: var(--ink);
+  background: var(--bg);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ---------- Tipografia (consome os tokens; valem nos dois modos) ---------- */
+.slide h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.04; letter-spacing: -1px; }
+.slide h2 { font-size: var(--fs-h2); font-weight: 800; letter-spacing: -.5px; }
+.slide h3 { font-size: var(--fs-h3); font-weight: 700; color: var(--accent); }
+.slide p, .slide li { font-size: var(--fs-body); line-height: 1.5; }
+.lead { font-size: var(--fs-lead); line-height: 1.45; }
+.big { font-size: var(--fs-big); font-weight: 800; }
+.muted { color: var(--muted); }
+.accent { color: var(--accent); }
+.accent2 { color: var(--accent2); }
+.warn { color: var(--warn); }
+.good { color: var(--good); }
+
+.eyebrow {
+  display: inline-block; font-size: var(--fs-eyebrow); font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+  background: var(--grad); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; margin-bottom: 14px;
+}
+
+/* ---------- Componentes ---------- */
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  padding: clamp(20px, 4vw, 34px); box-shadow: 0 8px 28px rgba(20, 40, 80, .06);
+}
+.card.flat { box-shadow: none; background: #FFFFFFAA; }
+
+.grid { display: grid; gap: var(--gap); }
+.g2 { grid-template-columns: 1fr 1fr; }
+.g3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.formula {
+  font-family: "Cambria Math", Georgia, "Times New Roman", serif;
+  font-size: var(--fs-formula); font-weight: 600; text-align: center;
+}
+.boxform {
+  font-family: Georgia, serif; font-weight: 700; text-align: center; color: var(--ink);
+  font-size: var(--fs-formula);
+  background: #EAF0FF; border: 2px solid #cdddff; border-radius: 14px;
+  padding: 16px 22px; margin: 10px 0;
+}
+
+.chip {
+  display: inline-block; font-size: .82em; font-weight: 700; padding: 8px 16px;
+  border-radius: 999px; background: #EAF0FF; color: var(--accent); margin: 6px 8px 0 0;
+}
+.chip.p { background: #F1EAFF; color: var(--accent2); }
+.chip.w { background: #FCEEE6; color: var(--warn); }
+.chip.g { background: #E6F4EE; color: var(--good); }
+
+.titlebar { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.titlebar .kicker { font-size: .8em; font-weight: 800; color: var(--muted); letter-spacing: 2px; }
+
+.step { display: flex; gap: 16px; align-items: flex-start; margin: 14px 0; }
+.step .n {
+  flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%;
+  background: var(--grad); color: #fff; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; font-size: .95em;
+}
+
+.slide ul { list-style: none; }
+.slide ul li { position: relative; padding-left: 32px; margin: 14px 0; }
+.slide ul li::before {
+  content: ""; position: absolute; left: 0; top: .45em; width: 16px; height: 16px;
+  border-radius: 5px; background: var(--grad);
+}
+
+.figcap { font-size: .8em; color: var(--muted); text-align: center; margin-top: 8px; }
+svg { display: block; max-width: 100%; height: auto; }
+
+/* ---------- Widgets interativos ---------- */
+.ctrlrow { display: flex; align-items: center; gap: 14px; margin: 12px 0; }
+.ctrlrow label { width: 2ch; font-weight: 800; font-size: 1.3em; }
+.ctrlrow input[type=range] { flex: 1; height: 8px; accent-color: var(--accent); }
+.ctrlrow .val { width: 5ch; text-align: right; font-weight: 800; font-family: Georgia, serif; }
+.eqlive { font-family: Georgia, serif; font-weight: 700; text-align: center; margin-top: 8px; font-size: 1.2em; }
+
+.opt {
+  display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+  font-size: var(--fs-body); font-weight: 600; padding: 18px 22px; margin: 12px 0;
+  border-radius: 14px; border: 2px solid var(--line); background: #fff; color: var(--ink);
+  transition: .15s;
+}
+.opt:hover { border-color: var(--accent); }
+.opt.correct { border-color: var(--good); background: #E9F7F0; color: var(--good); }
+.opt.wrong { border-color: var(--warn); background: #FCEEE6; color: var(--warn); }
+.opt.disabled { pointer-events: none; opacity: .85; }
+.feedback { font-weight: 700; margin-top: 14px; min-height: 1.2em; }
+
+/* =====================================================================
+   LAYOUT — MODO ESTUDO (padrão): documento rolável e responsivo
+   ===================================================================== */
+.deck { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+.slide {
+  display: flex; flex-direction: column; gap: var(--gap);
+  padding: clamp(40px, 9vw, 72px) 0;
+  border-bottom: 1px solid var(--line);
+}
+.slide:last-child { border-bottom: 0; }
+.slide.center { align-items: flex-start; }
+
+/* duas/três colunas viram uma só no celular */
+@media (max-width: 640px) {
+  .g2, .g3 { grid-template-columns: 1fr; }
+  .splitfill { flex-direction: column; }
+}
+.splitfill { display: flex; gap: 28px; }
+.splitfill .col { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+/* =====================================================================
+   LAYOUT — MODO APRESENTAÇÃO: deck 16:9 escalado ao projetor
+   ===================================================================== */
+.aula[data-modo="apresentacao"] {
+  /* tokens em px: o palco inteiro é escalado por transform */
+  --fs-eyebrow: 18px;
+  --fs-h1: 76px;
+  --fs-h2: 48px;
+  --fs-h3: 30px;
+  --fs-body: 26px;
+  --fs-lead: 32px;
+  --fs-big: 36px;
+  --fs-formula: 48px;
+  --gap: 30px;
+}
+body:has(.aula[data-modo="apresentacao"]),
+.aula[data-modo="apresentacao"] { background: #0f1626; }
+
+.aula[data-modo="apresentacao"] .deck {
+  position: fixed; left: 50%; top: 50%;
+  width: 1280px; height: 720px; max-width: none; margin: 0; padding: 0;
+  background: var(--bg); overflow: hidden;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .5);
+  transform: translate(-50%, -50%) scale(var(--escala, 1));
+  transform-origin: center center;
+}
+.aula[data-modo="apresentacao"] .slide {
+  position: absolute; inset: 0; border: 0;
+  padding: 70px 96px; justify-content: center;
+  opacity: 0; display: none; transition: opacity .4s ease, transform .2s ease-out;
+}
+/* zoom de destaque: clique no slide amplia um ponto */
+.aula[data-modo="apresentacao"] .deck { cursor: zoom-in; }
+.aula[data-modo="apresentacao"] .deck.ampliado { cursor: zoom-out; }
+.aula[data-modo="apresentacao"] .slide.ativo { display: flex; opacity: 1; }
+.aula[data-modo="apresentacao"] .slide.center { align-items: flex-start; justify-content: center; }
+.aula[data-modo="apresentacao"] .splitfill { flex-direction: row; }
+.aula[data-modo="apresentacao"] .g2 { grid-template-columns: 1fr 1fr; }
+.aula[data-modo="apresentacao"] .g3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ---------- Barra superior (modo estudo) ---------- */
+.aula-topo {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 20px; background: rgba(255, 255, 255, .92);
+  backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+}
+.aula-topo .titulo { flex: 1; font-weight: 800; font-size: 1rem; letter-spacing: -.3px; }
+.aula[data-modo="apresentacao"] .aula-topo { display: none; }
+
+/* ---------- Controles (botões) ---------- */
+.btn {
+  font-family: inherit; font-size: .95rem; font-weight: 700; border: none; cursor: pointer;
+  border-radius: 999px; padding: 9px 18px; color: #fff; background: var(--grad);
+  transition: filter .15s, transform .15s;
+}
+.btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn.ghost { background: #2b3a5c; }
+
+/* barra de controle do modo apresentação */
+.aula-controles {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: none; align-items: center; gap: 14px; z-index: 50;
+  background: rgba(15, 22, 38, .8); backdrop-filter: blur(8px);
+  padding: 10px 16px; border-radius: 999px; color: #fff;
+}
+.aula[data-modo="apresentacao"] ~ .aula-controles { display: flex; }
+.aula-controles .count { font-size: .95rem; min-width: 64px; text-align: center; color: #cfd9ee; }
+.aula-controles .btn.ghost { background: #2b3a5c; }
+
+/* barra de progresso (modo apresentação) */
+.aula-progresso {
+  position: fixed; top: 0; left: 0; height: 5px; width: 0;
+  background: var(--grad); z-index: 60; transition: width .35s ease; display: none;
+}
+.aula[data-modo="apresentacao"] ~ .aula-progresso { display: block; }
+
+/* =====================================================================
+   IMPRESSÃO — exportar como PDF (cada slide vira uma página A4 paisagem)
+   ===================================================================== */
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+  html, body { background: #fff !important; }
+  .aula-topo, .aula-controles, .aula-progresso { display: none !important; }
+
+  .aula, .aula[data-modo="apresentacao"] {
+    background: #fff !important;
+    /* tamanhos fixos (sem clamp/vw) para o papel */
+    --fs-eyebrow: 11px; --fs-h1: 30px; --fs-h2: 24px; --fs-h3: 16px;
+    --fs-body: 13px; --fs-lead: 16px; --fs-big: 18px; --fs-formula: 22px; --gap: 12px;
+  }
+  /* anula o palco/escala da apresentação e mostra tudo em fluxo */
+  .aula[data-modo="apresentacao"] .deck {
+    position: static; transform: none !important; width: auto; height: auto;
+    max-width: none; margin: 0; box-shadow: none;
+  }
+  .deck { max-width: none; margin: 0; padding: 0; }
+
+  .slide, .aula[data-modo="apresentacao"] .slide {
+    position: static; inset: auto; opacity: 1 !important; transform: none !important;
+    display: flex !important; justify-content: center; border: 0;
+    width: 297mm; height: 209mm; padding: 12mm 16mm;
+    break-after: page; page-break-after: always; break-inside: avoid;
+    overflow: hidden;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .splitfill { flex-direction: row !important; }
+  .g2 { grid-template-columns: 1fr 1fr !important; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr !important; }
+  .card { box-shadow: none !important; }
+  /* fundo dos gradientes/cores fiéis na impressão */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}

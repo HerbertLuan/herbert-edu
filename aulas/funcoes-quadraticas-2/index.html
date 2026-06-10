@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funções Quadráticas — Aula 2 · Herbert Edu</title>
+<style>
+/* =====================================================================
+   HERBERT EDU — Design System das AULAS (modo híbrido)
+   Fonte única da identidade visual das aulas. É "assada" inline em cada
+   aula publicada (autocontida / funciona offline).
+
+   Dois modos, mesma marcação:
+     • ESTUDO  (padrão)  → documento rolável e responsivo (celular)
+     • APRESENTAÇÃO       → deck 16:9 escalado para o projetor
+
+   Identidade: motivacional e energético · azul + roxo · base clara.
+   ===================================================================== */
+
+.aula {
+  --bg: #F7F9FC;
+  --ink: #16223A;
+  --muted: #5A6B86;
+  --line: #DCE3EE;
+  --card: #FFFFFF;
+  --accent: #2563EB;
+  --accent2: #7C3AED;
+  --warn: #D9480F;
+  --good: #137a4b;
+  --gold: #F59E0B;            /* pop de energia (acertos, conquistas) */
+  --grad: linear-gradient(135deg, var(--accent), var(--accent2));
+
+  /* tokens de tamanho — MODO ESTUDO (responsivo) */
+  --fs-eyebrow: .82rem;
+  --fs-h1: clamp(2rem, 7vw, 2.8rem);
+  --fs-h2: clamp(1.5rem, 5.5vw, 2rem);
+  --fs-h3: clamp(1.12rem, 4vw, 1.3rem);
+  --fs-body: clamp(1rem, 3.6vw, 1.12rem);
+  --fs-lead: clamp(1.1rem, 4vw, 1.35rem);
+  --fs-big: clamp(1.2rem, 5vw, 1.5rem);
+  --fs-formula: clamp(1.5rem, 7vw, 2.1rem);
+  --pad-slide: 40px 0;
+  --gap: 20px;
+
+  color: var(--ink);
+  background: var(--bg);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ---------- Tipografia (consome os tokens; valem nos dois modos) ---------- */
+.slide h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.04; letter-spacing: -1px; }
+.slide h2 { font-size: var(--fs-h2); font-weight: 800; letter-spacing: -.5px; }
+.slide h3 { font-size: var(--fs-h3); font-weight: 700; color: var(--accent); }
+.slide p, .slide li { font-size: var(--fs-body); line-height: 1.5; }
+.lead { font-size: var(--fs-lead); line-height: 1.45; }
+.big { font-size: var(--fs-big); font-weight: 800; }
+.muted { color: var(--muted); }
+.accent { color: var(--accent); }
+.accent2 { color: var(--accent2); }
+.warn { color: var(--warn); }
+.good { color: var(--good); }
+
+.eyebrow {
+  display: inline-block; font-size: var(--fs-eyebrow); font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+  background: var(--grad); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; margin-bottom: 14px;
+}
+
+/* ---------- Componentes ---------- */
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  padding: clamp(20px, 4vw, 34px); box-shadow: 0 8px 28px rgba(20, 40, 80, .06);
+}
+.card.flat { box-shadow: none; background: #FFFFFFAA; }
+
+.grid { display: grid; gap: var(--gap); }
+.g2 { grid-template-columns: 1fr 1fr; }
+.g3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.formula {
+  font-family: "Cambria Math", Georgia, "Times New Roman", serif;
+  font-size: var(--fs-formula); font-weight: 600; text-align: center;
+}
+.boxform {
+  font-family: Georgia, serif; font-weight: 700; text-align: center; color: var(--ink);
+  font-size: var(--fs-formula);
+  background: #EAF0FF; border: 2px solid #cdddff; border-radius: 14px;
+  padding: 16px 22px; margin: 10px 0;
+}
+
+.chip {
+  display: inline-block; font-size: .82em; font-weight: 700; padding: 8px 16px;
+  border-radius: 999px; background: #EAF0FF; color: var(--accent); margin: 6px 8px 0 0;
+}
+.chip.p { background: #F1EAFF; color: var(--accent2); }
+.chip.w { background: #FCEEE6; color: var(--warn); }
+.chip.g { background: #E6F4EE; color: var(--good); }
+
+.titlebar { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.titlebar .kicker { font-size: .8em; font-weight: 800; color: var(--muted); letter-spacing: 2px; }
+
+.step { display: flex; gap: 16px; align-items: flex-start; margin: 14px 0; }
+.step .n {
+  flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%;
+  background: var(--grad); color: #fff; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; font-size: .95em;
+}
+
+.slide ul { list-style: none; }
+.slide ul li { position: relative; padding-left: 32px; margin: 14px 0; }
+.slide ul li::before {
+  content: ""; position: absolute; left: 0; top: .45em; width: 16px; height: 16px;
+  border-radius: 5px; background: var(--grad);
+}
+
+.figcap { font-size: .8em; color: var(--muted); text-align: center; margin-top: 8px; }
+svg { display: block; max-width: 100%; height: auto; }
+
+/* ---------- Widgets interativos ---------- */
+.ctrlrow { display: flex; align-items: center; gap: 14px; margin: 12px 0; }
+.ctrlrow label { width: 2ch; font-weight: 800; font-size: 1.3em; }
+.ctrlrow input[type=range] { flex: 1; height: 8px; accent-color: var(--accent); }
+.ctrlrow .val { width: 5ch; text-align: right; font-weight: 800; font-family: Georgia, serif; }
+.eqlive { font-family: Georgia, serif; font-weight: 700; text-align: center; margin-top: 8px; font-size: 1.2em; }
+
+.opt {
+  display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+  font-size: var(--fs-body); font-weight: 600; padding: 18px 22px; margin: 12px 0;
+  border-radius: 14px; border: 2px solid var(--line); background: #fff; color: var(--ink);
+  transition: .15s;
+}
+.opt:hover { border-color: var(--accent); }
+.opt.correct { border-color: var(--good); background: #E9F7F0; color: var(--good); }
+.opt.wrong { border-color: var(--warn); background: #FCEEE6; color: var(--warn); }
+.opt.disabled { pointer-events: none; opacity: .85; }
+.feedback { font-weight: 700; margin-top: 14px; min-height: 1.2em; }
+
+/* =====================================================================
+   LAYOUT — MODO ESTUDO (padrão): documento rolável e responsivo
+   ===================================================================== */
+.deck { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+.slide {
+  display: flex; flex-direction: column; gap: var(--gap);
+  padding: clamp(40px, 9vw, 72px) 0;
+  border-bottom: 1px solid var(--line);
+}
+.slide:last-child { border-bottom: 0; }
+.slide.center { align-items: flex-start; }
+
+/* duas/três colunas viram uma só no celular */
+@media (max-width: 640px) {
+  .g2, .g3 { grid-template-columns: 1fr; }
+  .splitfill { flex-direction: column; }
+}
+.splitfill { display: flex; gap: 28px; }
+.splitfill .col { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+/* =====================================================================
+   LAYOUT — MODO APRESENTAÇÃO: deck 16:9 escalado ao projetor
+   ===================================================================== */
+.aula[data-modo="apresentacao"] {
+  /* tokens em px: o palco inteiro é escalado por transform */
+  --fs-eyebrow: 18px;
+  --fs-h1: 76px;
+  --fs-h2: 48px;
+  --fs-h3: 30px;
+  --fs-body: 26px;
+  --fs-lead: 32px;
+  --fs-big: 36px;
+  --fs-formula: 48px;
+  --gap: 30px;
+}
+body:has(.aula[data-modo="apresentacao"]),
+.aula[data-modo="apresentacao"] { background: #0f1626; }
+
+.aula[data-modo="apresentacao"] .deck {
+  position: fixed; left: 50%; top: 50%;
+  width: 1280px; height: 720px; max-width: none; margin: 0; padding: 0;
+  background: var(--bg); overflow: hidden;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .5);
+  transform: translate(-50%, -50%) scale(var(--escala, 1));
+  transform-origin: center center;
+}
+.aula[data-modo="apresentacao"] .slide {
+  position: absolute; inset: 0; border: 0;
+  padding: 70px 96px; justify-content: center;
+  opacity: 0; display: none; transition: opacity .4s ease, transform .2s ease-out;
+}
+/* zoom de destaque: clique no slide amplia um ponto */
+.aula[data-modo="apresentacao"] .deck { cursor: zoom-in; }
+.aula[data-modo="apresentacao"] .deck.ampliado { cursor: zoom-out; }
+.aula[data-modo="apresentacao"] .slide.ativo { display: flex; opacity: 1; }
+.aula[data-modo="apresentacao"] .slide.center { align-items: flex-start; justify-content: center; }
+.aula[data-modo="apresentacao"] .splitfill { flex-direction: row; }
+.aula[data-modo="apresentacao"] .g2 { grid-template-columns: 1fr 1fr; }
+.aula[data-modo="apresentacao"] .g3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ---------- Barra superior (modo estudo) ---------- */
+.aula-topo {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 20px; background: rgba(255, 255, 255, .92);
+  backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+}
+.aula-topo .titulo { flex: 1; font-weight: 800; font-size: 1rem; letter-spacing: -.3px; }
+.aula[data-modo="apresentacao"] .aula-topo { display: none; }
+
+/* ---------- Controles (botões) ---------- */
+.btn {
+  font-family: inherit; font-size: .95rem; font-weight: 700; border: none; cursor: pointer;
+  border-radius: 999px; padding: 9px 18px; color: #fff; background: var(--grad);
+  transition: filter .15s, transform .15s;
+}
+.btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn.ghost { background: #2b3a5c; }
+
+/* barra de controle do modo apresentação */
+.aula-controles {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: none; align-items: center; gap: 14px; z-index: 50;
+  background: rgba(15, 22, 38, .8); backdrop-filter: blur(8px);
+  padding: 10px 16px; border-radius: 999px; color: #fff;
+}
+.aula[data-modo="apresentacao"] ~ .aula-controles { display: flex; }
+.aula-controles .count { font-size: .95rem; min-width: 64px; text-align: center; color: #cfd9ee; }
+.aula-controles .btn.ghost { background: #2b3a5c; }
+
+/* barra de progresso (modo apresentação) */
+.aula-progresso {
+  position: fixed; top: 0; left: 0; height: 5px; width: 0;
+  background: var(--grad); z-index: 60; transition: width .35s ease; display: none;
+}
+.aula[data-modo="apresentacao"] ~ .aula-progresso { display: block; }
+
+/* =====================================================================
+   IMPRESSÃO — exportar como PDF (cada slide vira uma página A4 paisagem)
+   ===================================================================== */
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+  html, body { background: #fff !important; }
+  .aula-topo, .aula-controles, .aula-progresso { display: none !important; }
+
+  .aula, .aula[data-modo="apresentacao"] {
+    background: #fff !important;
+    /* tamanhos fixos (sem clamp/vw) para o papel */
+    --fs-eyebrow: 11px; --fs-h1: 30px; --fs-h2: 24px; --fs-h3: 16px;
+    --fs-body: 13px; --fs-lead: 16px; --fs-big: 18px; --fs-formula: 22px; --gap: 12px;
+  }
+  /* anula o palco/escala da apresentação e mostra tudo em fluxo */
+  .aula[data-modo="apresentacao"] .deck {
+    position: static; transform: none !important; width: auto; height: auto;
+    max-width: none; margin: 0; box-shadow: none;
+  }
+  .deck { max-width: none; margin: 0; padding: 0; }
+
+  .slide, .aula[data-modo="apresentacao"] .slide {
+    position: static; inset: auto; opacity: 1 !important; transform: none !important;
+    display: flex !important; justify-content: center; border: 0;
+    width: 297mm; height: 209mm; padding: 12mm 16mm;
+    break-after: page; page-break-after: always; break-inside: avoid;
+    overflow: hidden;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .splitfill { flex-direction: row !important; }
+  .g2 { grid-template-columns: 1fr 1fr !important; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr !important; }
+  .card { box-shadow: none !important; }
+  /* fundo dos gradientes/cores fiéis na impressão */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+
+</style>
+</head>
+<body>
+<div class="aula" data-modo="estudo" data-titulo="Funções Quadráticas — Aula 2">
+  <div class="deck">
+<!-- 1 — Abertura -->
+<section class="slide center">
+  <span class="eyebrow">Matemática para o ENEM · Aula 2 de 2</span>
+  <h1>Análise <span class="accent">Completa</span> & Aplicações ENEM</h1>
+  <p class="lead muted" style="max-width:44ch">Vértice, raízes, Bhaskara, discriminante — e como usar tudo isso para resolver questão rápido.</p>
+  <div>
+    <span class="chip">vértice</span>
+    <span class="chip p">máximo/mínimo</span>
+    <span class="chip">Bhaskara</span>
+    <span class="chip g">Δ e gráfico</span>
+    <span class="chip w">armadilhas</span>
+  </div>
+</section>
+
+<!-- 2 — Retomada + objetivos -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">AULA 2</span><h2>Retomada + objetivos</h2></div>
+  <div class="splitfill">
+    <div class="col">
+      <div class="card flat">
+        <h3>Recuperação ativa (Aula 1)</h3>
+        <p>Sem olhar: o que o <b>sinal de a</b> determina? Onde a parábola corta o <b>eixo y</b>?</p>
+        <p class="muted">a &gt; 0 ∪ (mínimo) · a &lt; 0 ∩ (máximo) · corta y em (0, c).</p>
+      </div>
+    </div>
+    <div class="col">
+      <h3>Hoje vamos calcular</h3>
+      <ul>
+        <li>Coordenadas do <b>vértice</b> e o valor de máximo/mínimo</li>
+        <li><b>Raízes</b> com Bhaskara e o papel do <b>discriminante Δ</b></li>
+        <li><b>Eixo de simetria</b> e atalhos para o ENEM</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3 — Vértice: fórmulas -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">VÉRTICE</span><h2>Coordenadas do vértice</h2></div>
+  <div class="grid g2">
+    <div class="card center" style="text-align:center">
+      <h3 class="accent">Coordenada x</h3>
+      <p class="boxform">x<sub>v</sub> = −b / 2a</p>
+      <p class="muted">É também o <b>eixo de simetria</b>.</p>
+    </div>
+    <div class="card center" style="text-align:center">
+      <h3 class="accent2">Coordenada y</h3>
+      <p class="boxform" style="background:#F1EAFF;border-color:#e0cdff">y<sub>v</sub> = −Δ / 4a</p>
+      <p class="muted">Atalho: ou calcule <b>f(x<sub>v</sub>)</b>.</p>
+    </div>
+  </div>
+  <div class="card flat">
+    <p><b>Dica:</b> ache <b>x<sub>v</sub></b> primeiro; depois substitua em f(x) para o <b>y<sub>v</sub></b> sem decorar a fórmula do Δ.</p>
+  </div>
+</section>
+
+<!-- 4 — Máximo e mínimo -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">MÁXIMO / MÍNIMO</span><h2>O vértice é o valor extremo</h2></div>
+  <div class="grid g2">
+    <div class="card">
+      <figure data-parabola data-a="0.6" data-b="-2.4" data-c="1" data-vertice data-rotulo="mínimo" data-cor="#137a4b" data-w="560" data-h="440"></figure>
+      <p class="figcap"><b class="good">a &gt; 0</b> → vértice é o ponto de <b>MÍNIMO</b></p>
+    </div>
+    <div class="card">
+      <figure data-parabola data-a="-0.6" data-b="2.4" data-c="-1" data-vertice data-rotulo="máximo" data-cor="#D9480F" data-w="560" data-h="440"></figure>
+      <p class="figcap"><b class="warn">a &lt; 0</b> → vértice é o ponto de <b>MÁXIMO</b></p>
+    </div>
+  </div>
+  <p class="lead"><b>No ENEM:</b> “lucro máximo”, “altura máxima”, “custo mínimo” = <b class="accent">y do vértice</b>.</p>
+</section>
+
+<!-- 5 — Eixo de simetria -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">SIMETRIA</span><h2>Eixo de simetria</h2></div>
+  <div class="splitfill" style="align-items:center">
+    <div class="col" style="flex:1.05">
+      <figure data-parabola data-a="0.5" data-b="0" data-c="-3" data-vertice data-rotulo="x = −b/2a" data-w="700" data-h="540"></figure>
+      <p class="figcap">Pontos com mesma altura ficam à mesma distância do eixo x<sub>v</sub>.</p>
+    </div>
+    <div class="col">
+      <div class="card"><p class="big accent">x = −b / 2a</p><p>Reta vertical que passa pelo vértice e espelha a parábola.</p></div>
+      <div class="card flat"><p><b>Atalho de raízes:</b> se você conhece as duas raízes, o vértice está <b>exatamente no meio</b> delas: x<sub>v</sub> = (x₁+x₂)/2.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 — Raízes & Bhaskara -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">RAÍZES</span><h2>Fórmula de Bhaskara</h2></div>
+  <div class="grid g2">
+    <div class="card center" style="text-align:center">
+      <p class="boxform">x = ( −b ± √Δ ) / 2a</p>
+      <p>com o <b>discriminante</b></p>
+      <p class="formula" style="font-size:1.3em;margin-top:10px">Δ = b² − 4ac</p>
+    </div>
+    <div class="col">
+      <div class="step"><div class="n">1</div><div>Identifique <b>a, b, c</b>.</div></div>
+      <div class="step"><div class="n">2</div><div>Calcule <b>Δ = b² − 4ac</b>.</div></div>
+      <div class="step"><div class="n">3</div><div>Aplique Bhaskara com o <b>±</b> → duas raízes.</div></div>
+      <div class="step"><div class="n">4</div><div>Confira: substitua uma raiz e veja se dá 0.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 — Discriminante x gráfico -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">Δ E O GRÁFICO</span><h2>O discriminante prevê as raízes</h2></div>
+  <div class="grid g3">
+    <div class="card center" style="text-align:center">
+      <figure data-parabola data-a="1" data-b="0" data-c="-3" data-raizes data-w="420" data-h="380"></figure>
+      <p class="figcap big good">Δ &gt; 0</p>
+      <p class="figcap">2 raízes reais — cruza o eixo x em 2 pontos.</p>
+    </div>
+    <div class="card center" style="text-align:center">
+      <figure data-parabola data-a="1" data-b="0" data-c="0" data-raizes data-w="420" data-h="380"></figure>
+      <p class="figcap big accent2">Δ = 0</p>
+      <p class="figcap">1 raiz — apenas toca o eixo x (no vértice).</p>
+    </div>
+    <div class="card center" style="text-align:center">
+      <figure data-parabola data-a="1" data-b="0" data-c="3" data-w="420" data-h="380"></figure>
+      <p class="figcap big warn">Δ &lt; 0</p>
+      <p class="figcap">Sem raiz real — não toca o eixo x.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 — Exemplo resolvido -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">EXEMPLO RESOLVIDO</span><h2>f(x) = x² − 6x + 8</h2></div>
+  <div class="splitfill">
+    <div class="col" style="flex:1.05">
+      <div class="step"><div class="n">1</div><div><b>Δ =</b> (−6)² − 4·1·8 = 36 − 32 = <b>4</b> → 2 raízes.</div></div>
+      <div class="step"><div class="n">2</div><div><b>x =</b> (6 ± √4)/2 = (6 ± 2)/2 → <b>x = 4</b> ou <b>x = 2</b>.</div></div>
+      <div class="step"><div class="n">3</div><div><b>x<sub>v</sub> =</b> −(−6)/2 = <b>3</b> (meio entre 2 e 4 ✓).</div></div>
+      <div class="step"><div class="n">4</div><div><b>y<sub>v</sub> =</b> f(3) = 9 − 18 + 8 = <b>−1</b> → mínimo.</div></div>
+    </div>
+    <div class="col">
+      <figure data-parabola data-a="1" data-b="-6" data-c="8" data-vertice data-raizes data-rotulo="(3, −1)" data-w="580" data-h="520"></figure>
+      <p class="figcap">Raízes (2,0) e (4,0); vértice (3, −1); corte y em (0, 8).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 — Problema ENEM -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">PROBLEMA · ESTILO ENEM</span><h2>Lucro de uma empresa</h2></div>
+  <div class="splitfill">
+    <div class="col" style="flex:1.05">
+      <div class="card">
+        <p class="lead">O lucro (em mil reais) por vender <b>x</b> unidades é</p>
+        <p class="formula" style="font-size:1.25em;margin:12px 0">L(x) = −x² + 40x − 300</p>
+        <p>Quantas unidades geram o <b>lucro máximo</b>? E qual é esse lucro?</p>
+      </div>
+      <div class="card flat"><p class="muted"><b>Reflexão:</b> por que faz sentido o lucro ter um teto e cair depois?</p></div>
+    </div>
+    <div class="col">
+      <div class="step"><div class="n">1</div><div><b>a = −1 &lt; 0</b> → existe máximo (vértice).</div></div>
+      <div class="step"><div class="n">2</div><div><b>x<sub>v</sub> =</b> −40/(2·−1) = <b>20 unidades</b>.</div></div>
+      <div class="step"><div class="n">3</div><div><b>L(20) =</b> −400 + 800 − 300 = <b>R$ 100 mil</b>.</div></div>
+      <div class="card" style="background:#E6F4EE;border-color:#bfe6d2"><p class="good big">Máximo: 20 unidades → R$ 100 mil.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 — Estratégias -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">ESTRATÉGIA</span><h2>Resolver rápido no ENEM</h2></div>
+  <div class="grid g2">
+    <div class="card"><h3>1. Leia a pergunta antes da função</h3><p>“Máximo/mínimo” → vértice. “Quando vale 0 / zero” → raízes.</p></div>
+    <div class="card"><h3>2. Use o sinal de a primeiro</h3><p>Elimina alternativas de cara (abre p/ cima ou baixo).</p></div>
+    <div class="card"><h3>3. Vértice no meio das raízes</h3><p>x<sub>v</sub> = (x₁+x₂)/2 evita refazer −b/2a.</p></div>
+    <div class="card"><h3>4. c é leitura direta</h3><p>Corte em y = (0, c), sem conta.</p></div>
+  </div>
+</section>
+
+<!-- 11 — Quiz: vértice -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">INTERATIVO · ATIVIDADE</span><h2>Encontre o vértice</h2></div>
+  <p class="lead">Para <b>f(x) = 2x² − 8x + 5</b>, qual é o vértice?</p>
+  <div class="quiz"
+       data-ok="Isso! x_v = 8/4 = 2 e f(2) = 8 − 16 + 5 = −3 → (2, −3). 🎉"
+       data-erro="A correta é B. x_v = −(−8)/(2·2) = 2; y_v = f(2) = 2·4 − 16 + 5 = −3 → (2, −3).">
+    <button class="opt">A) (2, 5)</button>
+    <button class="opt" data-correta>B) (2, −3)</button>
+    <button class="opt">C) (−2, 29)</button>
+    <button class="opt">D) (4, 5)</button>
+  </div>
+  <div class="feedback"></div>
+</section>
+
+<!-- 12 — Simulador raízes/Δ -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">INTERATIVO · SIMULADOR</span><h2>Δ controla as raízes</h2></div>
+  <p class="muted">Mexa em a, b e c e observe o discriminante e as raízes mudarem.</p>
+  <div data-simulador data-a="1" data-b="-2" data-c="-3"></div>
+</section>
+
+<!-- 13 — Quiz: armadilha -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">INTERATIVO · ARMADILHA CLÁSSICA</span><h2>Cuidado com a pegadinha</h2></div>
+  <p class="lead">Uma parábola tem <b>Δ &lt; 0</b> e <b>a &gt; 0</b>. Sobre f(x):</p>
+  <div class="quiz"
+       data-ok="Exato! Δ<0 (não cruza o eixo x) e a>0 (abre para cima) → a parábola fica toda acima do eixo x, logo f(x)>0 sempre. 🎉"
+       data-erro="A correta é B. Δ<0 significa nenhuma raiz real (não toca o eixo x); com a>0 a curva fica inteira acima do eixo → f(x)>0 para todo x.">
+    <button class="opt">A) Toca o eixo x em um único ponto.</button>
+    <button class="opt" data-correta>B) f(x) &gt; 0 para todo x (fica toda acima do eixo x).</button>
+    <button class="opt">C) Tem duas raízes reais distintas.</button>
+    <button class="opt">D) Abre para baixo.</button>
+  </div>
+  <div class="feedback"></div>
+</section>
+
+<!-- 14 — Resumo visual -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">RESUMO VISUAL</span><h2>Caixa de ferramentas da parábola</h2></div>
+  <div class="grid g2">
+    <div class="card"><p class="big accent">Vértice</p><p>x<sub>v</sub> = −b/2a · y<sub>v</sub> = f(x<sub>v</sub>) = −Δ/4a</p></div>
+    <div class="card"><p class="big accent2">Raízes</p><p>x = (−b ± √Δ)/2a · Δ = b² − 4ac</p></div>
+    <div class="card"><p class="big good">Δ &amp; gráfico</p><p>&gt;0: 2 raízes · =0: 1 · &lt;0: nenhuma</p></div>
+    <div class="card"><p class="big warn">Extremo</p><p>a&gt;0 → mínimo · a&lt;0 → máximo (no vértice)</p></div>
+  </div>
+</section>
+
+<!-- 15 — Encerramento -->
+<section class="slide center">
+  <span class="eyebrow">Encerramento · Aula 2</span>
+  <h2>Da <span class="accent">leitura</span> ao <span class="accent2">cálculo</span> completo</h2>
+  <div class="grid g2" style="width:100%">
+    <div class="card"><p>✓ Vértice, máximo/mínimo e eixo de simetria</p></div>
+    <div class="card"><p>✓ Bhaskara e discriminante</p></div>
+    <div class="card"><p>✓ Relação Δ ↔ número de raízes</p></div>
+    <div class="card"><p>✓ Estratégias e armadilhas do ENEM</p></div>
+  </div>
+  <p class="lead muted">Pratique: refaça os dois exemplos resolvidos sem olhar os passos. <b>Recuperação ativa</b> fixa mais que reler.</p>
+</section>
+
+  </div>
+</div>
+<script>
+/* =====================================================================
+   HERBERT EDU — Motor das AULAS (modo híbrido)
+   Inlinado em cada aula publicada. Sem dependências externas.
+
+   Recursos:
+     • ESTUDO (rolagem) ⇄ APRESENTAÇÃO (deck 16:9 + tela cheia)
+     • ZOOM de destaque no modo apresentação (clique para ampliar um ponto;
+       mova o mouse para deslocar; clique de novo para voltar)
+     • Exportar a aula como PDF bonito (cada slide vira uma página)
+     • Navegação de slides, teclado, barra de progresso
+     • Widgets declarativos:
+         - [data-parabola a b c | annot | vertice | raizes | crescimento]
+         - [data-simulador]   → simulador a,b,c interativo
+         - .quiz com .opt[data-correta] → quiz de recuperação ativa
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  const aula = document.querySelector(".aula");
+  if (!aula) return;
+  const deck = aula.querySelector(".deck");
+  const slides = [...deck.querySelectorAll(".slide")];
+  let idx = 0;
+
+  /* ---------- UI (criada via JS; autor só escreve slides) ---------- */
+  const titulo = aula.dataset.titulo || document.title || "Aula";
+
+  const topo = document.createElement("div");
+  topo.className = "aula-topo";
+  topo.innerHTML =
+    `<span class="titulo">${titulo}</span>` +
+    `<button class="btn ghost" data-acao="pdf">⬇ PDF</button>` +
+    `<button class="btn" data-acao="apresentar">⛶ Apresentar</button>`;
+  aula.insertBefore(topo, deck);
+
+  const controles = document.createElement("div");
+  controles.className = "aula-controles";
+  controles.innerHTML =
+    `<button class="btn ghost" data-acao="voltar">← Voltar</button>` +
+    `<span class="count"><b data-cur>1</b> / <span data-tot>${slides.length}</span></span>` +
+    `<button class="btn" data-acao="avancar">Avançar →</button>` +
+    `<button class="btn ghost" data-acao="sair">✕ Sair</button>`;
+  const progresso = document.createElement("div");
+  progresso.className = "aula-progresso";
+  aula.after(controles, progresso);
+
+  const elCur = controles.querySelector("[data-cur]");
+
+  /* ---------- Modo apresentação ---------- */
+  function fit() {
+    const escala = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    aula.style.setProperty("--escala", escala);
+  }
+  function limpaZoom() {
+    zoomAtivo = false;
+    slides.forEach((s) => { s.style.transform = ""; s.style.transformOrigin = ""; });
+  }
+  function mostra(i) {
+    limpaZoom();
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, k) => s.classList.toggle("ativo", k === idx));
+    elCur.textContent = idx + 1;
+    progresso.style.width = ((idx + 1) / slides.length * 100) + "%";
+  }
+  function entrarApresentacao() {
+    aula.dataset.modo = "apresentacao";
+    fit();
+    mostra(0);
+    if (aula.requestFullscreen) aula.requestFullscreen().catch(() => {});
+  }
+  function sairApresentacao() {
+    limpaZoom();
+    aula.dataset.modo = "estudo";
+    slides.forEach((s) => s.classList.remove("ativo"));
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+
+  /* ---------- Exportar PDF (impressão = cada slide vira página) ---------- */
+  function exportarPDF() {
+    if (aula.dataset.modo === "apresentacao") sairApresentacao();
+    setTimeout(() => window.print(), 150);
+  }
+
+  /* ---------- Zoom de destaque (modo apresentação) ---------- */
+  let zoomAtivo = false;
+  const FATOR_ZOOM = 2.4;
+  function origem(slide, e) {
+    const r = slide.getBoundingClientRect();
+    const ox = ((e.clientX - r.left) / r.width) * 100;
+    const oy = ((e.clientY - r.top) / r.height) * 100;
+    return `${ox.toFixed(1)}% ${oy.toFixed(1)}%`;
+  }
+  deck.addEventListener("click", (e) => {
+    if (aula.dataset.modo !== "apresentacao") return;
+    if (e.target.closest("input, button, a, .opt")) return; // não atrapalha widgets
+    const slide = slides[idx];
+    if (!slide) return;
+    zoomAtivo = !zoomAtivo;
+    if (zoomAtivo) {
+      slide.style.transformOrigin = origem(slide, e);
+      slide.style.transform = `scale(${FATOR_ZOOM})`;
+      deck.classList.add("ampliado");
+    } else {
+      slide.style.transform = "";
+      deck.classList.remove("ampliado");
+    }
+  });
+  deck.addEventListener("mousemove", (e) => {
+    if (!zoomAtivo || aula.dataset.modo !== "apresentacao") return;
+    const slide = slides[idx];
+    if (slide) slide.style.transformOrigin = origem(slide, e);
+  });
+
+  /* ---------- Ações e teclado ---------- */
+  document.addEventListener("click", (e) => {
+    const acao = e.target.closest("[data-acao]")?.dataset.acao;
+    if (acao === "apresentar") entrarApresentacao();
+    if (acao === "pdf") exportarPDF();
+    if (acao === "sair") sairApresentacao();
+    if (acao === "avancar") mostra(idx + 1);
+    if (acao === "voltar") mostra(idx - 1);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (aula.dataset.modo !== "apresentacao") return;
+    if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); mostra(idx + 1); }
+    if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); mostra(idx - 1); }
+    if (e.key === "Escape") { if (zoomAtivo) limpaZoom(); else sairApresentacao(); }
+  });
+  document.addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement && aula.dataset.modo === "apresentacao") sairApresentacao();
+  });
+  window.addEventListener("resize", () => { if (aula.dataset.modo === "apresentacao") fit(); });
+
+  /* ===================================================================
+     WIDGETS
+     =================================================================== */
+
+  // ---- Parábola (SVG) ----
+  function parabolaSVG(o) {
+    const w = o.w || 640, h = o.h || 480;
+    const a = +o.a, b = +o.b, c = +o.c;
+    const xmin = o.xmin ?? -6, xmax = o.xmax ?? 6, ymin = o.ymin ?? -6, ymax = o.ymax ?? 6;
+    const px = (x) => ((x - xmin) / (xmax - xmin)) * w;
+    const py = (y) => h - ((y - ymin) / (ymax - ymin)) * h;
+    const cor = o.cor || "#7C3AED";
+
+    let grid = "";
+    for (let g = Math.ceil(xmin); g <= xmax; g++) {
+      grid += `<line x1="${px(g)}" y1="0" x2="${px(g)}" y2="${h}" stroke="#EAEFF7" stroke-width="1"/>`;
+      grid += `<line x1="0" y1="${py(g)}" x2="${w}" y2="${py(g)}" stroke="#EAEFF7" stroke-width="1"/>`;
+    }
+
+    let curva = "";
+    const ponto = (i) => { const x = xmin + (xmax - xmin) * i / 240; return [x, a * x * x + b * x + c]; };
+    if (o.crescimento) {
+      const xv = -b / (2 * a);
+      let dDown = "", dUp = "";
+      for (let i = 0; i <= 240; i++) {
+        const [x, y] = ponto(i), X = px(x).toFixed(1), Y = py(y).toFixed(1);
+        const sobe = a > 0 ? x > xv : x < xv;
+        if (sobe) dUp += (dUp ? "L" : "M") + X + " " + Y + " ";
+        else dDown += (dDown ? "L" : "M") + X + " " + Y + " ";
+      }
+      curva =
+        `<path d="${dDown}" fill="none" stroke="#D9480F" stroke-width="6" stroke-linecap="round"/>` +
+        `<path d="${dUp}" fill="none" stroke="#137a4b" stroke-width="6" stroke-linecap="round"/>`;
+    } else {
+      let d = "";
+      for (let i = 0; i <= 240; i++) { const [x, y] = ponto(i); d += (d ? "L" : "M") + px(x).toFixed(1) + " " + py(y).toFixed(1) + " "; }
+      curva = `<path d="${d}" fill="none" stroke="#2563EB" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    }
+
+    let ann = "";
+    if (o.annot || o.vertice) {
+      const xv = -b / (2 * a), yv = a * xv * xv + b * xv + c;
+      ann += `<line x1="${px(xv)}" y1="0" x2="${px(xv)}" y2="${h}" stroke="${cor}" stroke-width="2" stroke-dasharray="8 8"/>`;
+      ann += `<circle cx="${px(xv)}" cy="${py(yv)}" r="9" fill="${cor}"/>`;
+      const rot = o.rotulo || "vértice";
+      ann += `<text x="${px(xv) + 12}" y="${py(yv) + (a > 0 ? 34 : -16)}" font-size="20" fill="${cor}" font-weight="800">${rot}</text>`;
+    }
+    if (o.annot) {
+      ann += `<circle cx="${px(0)}" cy="${py(c)}" r="8" fill="#137a4b"/>`;
+      ann += `<text x="${px(0) + 12}" y="${py(c) - 12}" font-size="20" fill="#137a4b" font-weight="700">(0, c)</text>`;
+    }
+    if (o.annot || o.raizes) {
+      const disc = b * b - 4 * a * c;
+      if (disc >= 0) {
+        [...new Set([(-b - Math.sqrt(disc)) / (2 * a), (-b + Math.sqrt(disc)) / (2 * a)])]
+          .forEach((r) => { ann += `<circle cx="${px(r)}" cy="${py(0)}" r="7" fill="#2563EB"/>`; });
+      }
+    }
+
+    return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px;margin:0 auto">
+      ${grid}
+      <line x1="0" y1="${py(0)}" x2="${w}" y2="${py(0)}" stroke="#9AA8C0" stroke-width="2"/>
+      <line x1="${px(0)}" y1="0" x2="${px(0)}" y2="${h}" stroke="#9AA8C0" stroke-width="2"/>
+      ${curva}${ann}
+    </svg>`;
+  }
+
+  function initParabolas() {
+    document.querySelectorAll("[data-parabola]").forEach((el) => {
+      el.innerHTML = parabolaSVG({
+        a: el.dataset.a, b: el.dataset.b, c: el.dataset.c,
+        w: +el.dataset.w || 640, h: +el.dataset.h || 480,
+        annot: el.hasAttribute("data-annot"),
+        vertice: el.hasAttribute("data-vertice"),
+        raizes: el.hasAttribute("data-raizes"),
+        crescimento: el.hasAttribute("data-crescimento"),
+        rotulo: el.dataset.rotulo,
+        cor: el.dataset.cor,
+      });
+    });
+  }
+
+  // ---- Simulador a, b, c ----
+  function initSimuladores() {
+    document.querySelectorAll("[data-simulador]").forEach((el) => {
+      const a0 = el.dataset.a ?? 1, b0 = el.dataset.b ?? -2, c0 = el.dataset.c ?? -3;
+      el.innerHTML = `
+        <div class="card" style="padding:22px 26px">
+          <div class="ctrlrow"><label class="accent">a</label><input data-s="a" type="range" min="-3" max="3" step="0.1" value="${a0}"><span class="val" data-v="a"></span></div>
+          <div class="ctrlrow"><label class="accent">b</label><input data-s="b" type="range" min="-8" max="8" step="0.5" value="${b0}"><span class="val" data-v="b"></span></div>
+          <div class="ctrlrow"><label class="accent">c</label><input data-s="c" type="range" min="-8" max="8" step="0.5" value="${c0}"><span class="val" data-v="c"></span></div>
+          <p class="eqlive" data-eq></p>
+        </div>
+        <div class="card flat" data-leitura><p class="muted"></p></div>
+        <div data-plot style="margin-top:10px"></div>`;
+      const get = (k) => parseFloat(el.querySelector(`[data-s="${k}"]`).value);
+      const sinal = (v) => (v < 0 ? "− " + Math.abs(v) : "+ " + v);
+      function atualiza() {
+        const a = get("a"), b = get("b"), c = get("c");
+        ["a", "b", "c"].forEach((k) => el.querySelector(`[data-v="${k}"]`).textContent = get(k).toFixed(1));
+        el.querySelector("[data-eq]").innerHTML = `f(x) = ${a}x² ${sinal(b)}x ${sinal(c)}`;
+        el.querySelector("[data-plot]").innerHTML = parabolaSVG({ a, b, c, annot: true, w: 560, h: 480 });
+        const conc = a > 0 ? "concavidade para <b>cima</b> ∪ (mínimo)"
+          : a < 0 ? "concavidade para <b>baixo</b> ∩ (máximo)" : "a = 0 → não é quadrática!";
+        const disc = b * b - 4 * a * c;
+        let nr;
+        if (a === 0) nr = "—";
+        else if (disc > 0) {
+          const r1 = ((-b - Math.sqrt(disc)) / (2 * a)).toFixed(2), r2 = ((-b + Math.sqrt(disc)) / (2 * a)).toFixed(2);
+          nr = `2 raízes (x = ${r1} e x = ${r2})`;
+        } else if (Math.abs(disc) < 1e-9) nr = `1 raiz (x = ${(-b / (2 * a)).toFixed(2)})`;
+        else nr = "sem raízes reais (Δ<0)";
+        el.querySelector("[data-leitura] p").innerHTML =
+          `<b>Leitura:</b> ${conc} · corta o eixo y em <b>(0, ${c})</b> · Δ = ${disc.toFixed(1)} → ${nr}.`;
+      }
+      el.querySelectorAll("input[type=range]").forEach((i) => i.addEventListener("input", atualiza));
+      atualiza();
+    });
+  }
+
+  // ---- Quiz ----
+  function initQuizzes() {
+    document.querySelectorAll(".quiz").forEach((quiz) => {
+      const opts = [...quiz.querySelectorAll(".opt")];
+      const fb = quiz.querySelector(".feedback");
+      const ok = quiz.dataset.ok || "Correto! 🎉";
+      const erro = quiz.dataset.erro || "Quase! Veja a alternativa correta destacada.";
+      opts.forEach((btn) => btn.addEventListener("click", () => {
+        opts.forEach((b) => b.classList.add("disabled"));
+        const certa = btn.hasAttribute("data-correta");
+        btn.classList.add(certa ? "correct" : "wrong");
+        if (!certa) opts.find((b) => b.hasAttribute("data-correta"))?.classList.add("correct");
+        if (fb) fb.innerHTML = certa ? `<span class="good">${ok}</span>` : `<span class="warn">${erro}</span>`;
+      }));
+    });
+  }
+
+  initParabolas();
+  initSimuladores();
+  initQuizzes();
+
+  window.Aula = { parabolaSVG, mostra, entrarApresentacao, exportarPDF };
+})();
+
+</script>
+</body>
+</html>

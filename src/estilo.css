@@ -1,0 +1,235 @@
+/* =====================================================================
+   HERBERT EDU — Design System do site
+   Paleta herdada das aulas para identidade visual única.
+   ===================================================================== */
+:root {
+  --bg: #F7F9FC;
+  --ink: #16223A;
+  --muted: #5A6B86;
+  --line: #DCE3EE;
+  --card: #FFFFFF;
+  --accent: #2563EB;
+  --accent2: #7C3AED;
+  --warn: #D9480F;
+  --good: #137a4b;
+  --gold: #B9851A;
+  --radius: 18px;
+  --shadow: 0 8px 28px rgba(20, 40, 80, 0.08);
+  --maxw: 1100px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ---------- Cabeçalho ---------- */
+.topo {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  padding: 56px 24px 64px;
+  text-align: center;
+}
+.topo .marca {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.topo .sub {
+  margin-top: 10px;
+  font-size: clamp(1rem, 3.5vw, 1.25rem);
+  opacity: 0.92;
+  font-weight: 500;
+}
+
+/* ---------- Conteúdo ---------- */
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.conteudo { margin-top: -32px; padding-bottom: 80px; }
+
+/* ---------- Tema (agrupador) ---------- */
+.tema { margin: 40px 0; }
+.tema-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.tema-bolinha {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent);
+  flex: 0 0 auto;
+}
+.tema-titulo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+.tema-descricao { color: var(--muted); font-size: 0.98rem; margin-top: 2px; }
+
+/* ---------- Grade de aulas ---------- */
+.aulas-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+.aula-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+.aula-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 14px 36px rgba(37, 99, 235, 0.16);
+}
+.aula-tag {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #EAF0FF;
+  color: var(--accent);
+}
+.aula-tag.pdf { background: #FCEEE6; color: var(--warn); }
+.aula-titulo { font-size: 1.18rem; font-weight: 700; letter-spacing: -0.3px; }
+.aula-descricao { color: var(--muted); font-size: 0.95rem; flex: 1; }
+.aula-abrir {
+  margin-top: 4px;
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.95rem;
+}
+.aula-data {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* ---------- Card "em preparação" (leve animação de construção) ---------- */
+.aula-card.preparando {
+  cursor: default;
+  border-style: dashed;
+  border-color: #c9d4ea;
+  background: #fbfcff;
+  position: relative;
+  overflow: hidden;
+}
+.aula-card.preparando:hover { transform: none; box-shadow: var(--shadow); border-color: #c9d4ea; }
+/* brilho que cruza o card de leve */
+.aula-card.preparando::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(110deg, transparent 35%, rgba(124, 58, 237, 0.07) 50%, transparent 65%);
+  background-size: 220% 100%;
+  animation: prep-shimmer 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.aula-card.preparando .aula-titulo,
+.aula-card.preparando .aula-descricao { color: var(--muted); }
+.aula-tag.prep {
+  background: #F1EAFF; color: var(--accent2);
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.aula-tag.prep::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent2); animation: prep-pulse 1.4s ease-in-out infinite;
+}
+.prep-txt { color: var(--accent2); font-weight: 700; }
+/* três pontinhos "trabalhando" */
+.prep-dots { display: flex; gap: 6px; margin-top: 2px; }
+.prep-dots span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  animation: prep-bounce 1.2s ease-in-out infinite;
+}
+.prep-dots span:nth-child(2) { animation-delay: 0.18s; }
+.prep-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes prep-shimmer { 0% { background-position: 130% 0; } 100% { background-position: -130% 0; } }
+@keyframes prep-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
+@keyframes prep-bounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(-6px); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .aula-card.preparando::after,
+  .aula-tag.prep::before,
+  .prep-dots span { animation: none; }
+}
+
+/* ---------- Estados ---------- */
+.estado {
+  text-align: center;
+  color: var(--muted);
+  padding: 80px 20px;
+  font-size: 1.05rem;
+}
+.estado .emoji { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+
+/* ---------- Rodapé ---------- */
+.rodape {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 32px 20px 48px;
+}
+
+/* ---------- Botão e modal de QR code ---------- */
+.qr-btn {
+  position: fixed; top: 16px; right: 16px; z-index: 40;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: inherit; font-weight: 800; font-size: 0.9rem; color: #fff;
+  background: rgba(255, 255, 255, 0.18); border: 1.5px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(6px); border-radius: 999px; padding: 9px 16px; cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.qr-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-1px); }
+.qr-btn svg { display: block; }
+
+.qr-modal {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 22, 38, 0.6); backdrop-filter: blur(4px); padding: 20px;
+}
+.qr-modal[hidden] { display: none; }
+.qr-card {
+  position: relative; background: #fff; border-radius: 24px;
+  padding: 32px 36px 28px; text-align: center; max-width: 360px; width: 100%;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35); animation: qr-pop 0.18s ease-out;
+}
+@keyframes qr-pop { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.qr-card h2 { font-size: 1.4rem; letter-spacing: -0.5px; }
+.qr-ajuda { color: var(--muted); margin-top: 4px; font-size: 0.95rem; }
+.qr-img { display: flex; justify-content: center; margin: 20px 0 12px; }
+.qr-img canvas { border-radius: 12px; max-width: 100%; height: auto; }
+.qr-url {
+  font-weight: 800; color: var(--accent); font-size: 1.05rem; letter-spacing: -0.3px;
+}
+.qr-fechar {
+  position: absolute; top: 14px; right: 16px; border: none; background: none;
+  font-size: 1.3rem; color: var(--muted); cursor: pointer; line-height: 1;
+}
+.qr-fechar:hover { color: var(--ink); }
+
+/* ---------- Responsivo (celular do aluno) ---------- */
+@media (max-width: 480px) {
+  .topo { padding: 40px 18px 48px; }
+  .aulas-grade { grid-template-columns: 1fr; }
+}

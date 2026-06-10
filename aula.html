@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula · Herbert Edu</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+      background: #0f1626;
+      display: flex;
+      flex-direction: column;
+    }
+    .barra {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      background: rgba(15, 22, 38, 0.95);
+      color: #fff;
+      flex: 0 0 auto;
+    }
+    .barra a, .barra button {
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 9px 18px;
+      background: #2b3a5c;
+      color: #fff;
+      transition: background 0.15s;
+    }
+    .barra a:hover, .barra button:hover { background: #2563EB; }
+    .barra .titulo {
+      flex: 1;
+      font-weight: 700;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #cfd9ee;
+    }
+    .palco { flex: 1; position: relative; }
+    iframe { border: 0; width: 100%; height: 100%; display: block; background: #0f1626; }
+    .carregando {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #cfd9ee; font-size: 1.05rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="barra">
+    <a href="/">← Voltar</a>
+    <span class="titulo" id="titulo">Carregando…</span>
+    <button id="apresentar">⛶ Apresentar</button>
+  </div>
+  <div class="palco">
+    <div class="carregando" id="carregando">Carregando aula…</div>
+    <iframe id="quadro" title="Aula" allowfullscreen referrerpolicy="no-referrer"></iframe>
+  </div>
+
+  <script type="module" src="/src/aula.js"></script>
+</body>
+</html>
