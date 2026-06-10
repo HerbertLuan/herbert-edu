@@ -1,11 +1,15 @@
 // Player de minigame: lê o jogo pelo ?id=, busca o doc no Firestore,
-// baixa o JSON de perguntas do Storage e entrega ao motor de quiz.
+// baixa o JSON de perguntas do Storage e entrega ao motor do formato.
 import { doc, getDoc } from "firebase/firestore";
 import { db, iniciarAnalytics } from "./firebase.js";
 import { iniciarQuiz } from "./lib/quiz.js";
+import { iniciarSinais } from "./lib/sinais.js";
 import { registrarPontuacao } from "./lib/jogadores.js";
 
 iniciarAnalytics();
+
+// Um motor por formato de envelope; formatos novos entram aqui.
+const MOTORES = { quiz: iniciarQuiz, sinais: iniciarSinais };
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
@@ -65,7 +69,14 @@ async function carregar() {
     return;
   }
 
-  iniciarQuiz({
+  const motor = MOTORES[perguntas?.formato];
+  if (!motor) {
+    console.error(`Formato de jogo desconhecido: ${perguntas?.formato}`);
+    estado("🧩", "Este jogo usa um formato que o site ainda não entende. Tente atualizar a página.");
+    return;
+  }
+
+  motor({
     container: palco,
     dados: perguntas,
     jogoId: id,
@@ -77,4 +88,18 @@ async function carregar() {
   });
 }
 
-carregar();
+// Modo demo (só em dev): jogo.html?demo=sinais roda o motor com um envelope
+// local, sem Firestore — útil pra testar antes de publicar. O bloco inteiro
+// morre no build de produção (import.meta.env.DEV vira false).
+const demo = params.get("demo");
+if (import.meta.env.DEV && demo && MOTORES[demo]) {
+  document.title = `Demo ${demo} · Herbert Edu`;
+  MOTORES[demo]({
+    container: palco,
+    dados: { formato: demo, titulo: `Sinais da Parábola (demo)`, duracao: 45 },
+    jogoId: `demo-${demo}`,
+    aoTerminar: (resultado) => console.log("[demo] aoTerminar:", resultado),
+  });
+} else {
+  carregar();
+}
