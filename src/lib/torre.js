@@ -25,7 +25,7 @@ const PENALIDADE_ERRO = 3;      // s descontados por erro
 const PONTOS_BASE = 10;         // escala igual à dos outros minigames
 const JANELA_RELAMPAGO = 2.5;   // s para responder a carta relâmpago
 const CHANCE_ESPECIAL = 0.22;   // chance de carta relâmpago (nível 3+)
-const MAX_ANDARES_VISIVEIS = 13;
+const MAX_ANDARES_VISIVEIS = 16;
 
 // Tipos de carta liberados por faixa de combo; a torre acelera e vale
 // mais a cada nível, espelhando o "Sinais da Parábola".
@@ -350,8 +350,13 @@ export function iniciarTorre({ container, dados, jogoId, aoTerminar }) {
         </header>
         <div class="tor-arena">
           <aside class="tor-torre" aria-hidden="true">
-            <div class="tor-contador">🏙 <b>0</b></div>
-            <div class="tor-predio"></div>
+            <div class="tor-contador">🏙 <b>0</b> <span>andares</span></div>
+            <div class="tor-mastro balanco-0">
+              <div class="tor-predio">
+                <div class="tor-base"></div>
+                <div class="tor-topo"></div>
+              </div>
+            </div>
           </aside>
           <div class="tor-carta-area"></div>
         </div>
@@ -424,21 +429,55 @@ export function iniciarTorre({ container, dados, jogoId, aoTerminar }) {
     if (fundo) fundo.className = `tor-fundo nivel-${idx + 1}`;
   }
 
-  // Levanta um andar: empilha um bloco no topo e atualiza o contador.
+  // Levanta um andar: insere um bloco logo abaixo do telhado, encolhe os
+  // andares para caberem (a torre fica cada vez mais alta e esguia) e
+  // intensifica o balanço — quanto mais alto, mais tensa fica a subida.
   function crescerTorre() {
     estado.andares += 1;
     const contador = app.querySelector(".tor-contador b");
     if (contador) contador.textContent = estado.andares;
     const predio = app.querySelector(".tor-predio");
     if (!predio) return;
+    const topo = predio.querySelector(".tor-topo");
     const nivelIdx = nivelIdxDe(estado.streak);
     const andar = document.createElement("div");
-    andar.className = `tor-andar n${nivelIdx + 1}${REDUZ_MOVIMENTO ? "" : " nova"}`;
-    predio.appendChild(andar); // column-reverse: novo andar entra no topo
-    // Mantém o DOM enxuto: descarta os andares mais antigos (base).
-    while (predio.childElementCount > MAX_ANDARES_VISIVEIS) {
-      predio.removeChild(predio.firstElementChild);
-    }
+    andar.className = `tor-andar n${nivelIdx + 1}`
+      + (estado.andares % 2 === 0 ? " alt" : "")
+      + (REDUZ_MOVIMENTO ? "" : " nova");
+    predio.insertBefore(andar, topo); // column-reverse: entra no topo, sob o telhado
+    // Mantém o DOM enxuto: descarta o andar mais antigo (logo acima da base).
+    const andares = predio.querySelectorAll(".tor-andar");
+    if (andares.length > MAX_ANDARES_VISIVEIS) andares[0].remove();
+    ajustarAltura(predio);
+    ajustarBalanco();
+    sacudirTorre("tremor");
+  }
+
+  // Encolhe os andares conforme a torre sobe, para a torre inteira caber
+  // no quadro e parecer cada vez mais alta.
+  function ajustarAltura(predio) {
+    const n = predio.querySelectorAll(".tor-andar").length || 1;
+    const h = Math.max(11, Math.min(22, Math.floor(300 / n)));
+    predio.style.setProperty("--andar-h", `${h}px`);
+  }
+
+  // Quanto mais alta a torre, mais ela balança — tensão crescente.
+  function ajustarBalanco() {
+    const mastro = app.querySelector(".tor-mastro");
+    if (!mastro) return;
+    const a = estado.andares;
+    const nivel = a >= 25 ? 4 : a >= 16 ? 3 : a >= 9 ? 2 : a >= 4 ? 1 : 0;
+    mastro.className = `tor-mastro balanco-${nivel}`;
+  }
+
+  // Sacode a torre: tremor leve no impacto do andar, tranco forte no erro.
+  function sacudirTorre(classe) {
+    if (REDUZ_MOVIMENTO) return;
+    const predio = app.querySelector(".tor-predio");
+    if (!predio) return;
+    predio.classList.remove("tremor", "tremor-forte");
+    void predio.offsetWidth; // reinicia a animação
+    predio.classList.add(classe);
   }
 
   // ---- responder ----
@@ -500,6 +539,7 @@ export function iniciarTorre({ container, dados, jogoId, aoTerminar }) {
     setTimeout(() => app.querySelector(".tor-relogio")?.classList.remove("penal"), 500);
     app.querySelector(".tor-jogo")?.classList.add("flash-erro");
     setTimeout(() => app.querySelector(".tor-jogo")?.classList.remove("flash-erro"), 450);
+    sacudirTorre("tremor-forte");
 
     const prefixo = porTempo ? "⏱ Tempo! " : "";
     mostrarToast(`${prefixo}${estado.carta.explicacao}`);
