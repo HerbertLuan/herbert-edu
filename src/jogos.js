@@ -88,10 +88,15 @@ async function carregar() {
       jogosPorTema.get(jogo.temaId).push(jogo);
     });
 
+    // Publicados primeiro, "em preparação" depois — mantém a ordem relativa
+    // dentro de cada grupo (já vem ordenado por 'ordem').
+    const PESO_ESTADO = { publicado: 0, preparacao: 1 };
     const secoes = [];
     temasSnap.forEach((doc) => {
       const tema = { id: doc.id, ...doc.data() };
-      const jogos = jogosPorTema.get(tema.id) || [];
+      const jogos = (jogosPorTema.get(tema.id) || [])
+        .slice()
+        .sort((a, b) => (PESO_ESTADO[estadoDe(a)] ?? 0) - (PESO_ESTADO[estadoDe(b)] ?? 0));
       if (jogos.length) secoes.push(secaoTema(tema, jogos));
     });
 

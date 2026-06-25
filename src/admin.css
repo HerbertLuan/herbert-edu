@@ -31,6 +31,14 @@
 .barra-topo h2 { font-size: 1.4rem; letter-spacing: -0.5px; }
 .dica { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
 
+/* ---------- Abas ---------- */
+.abas { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+.aba { font-family: inherit; font-size: 0.95rem; font-weight: 700; color: var(--muted); background: none; border: none;
+  cursor: pointer; padding: 10px 4px; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: 0.12s; }
+.aba:hover { color: var(--ink); }
+.aba.sel { color: var(--accent); border-bottom-color: var(--accent); }
+.vista[hidden] { display: none; }
+
 .btn { font-family: inherit; font-size: 0.92rem; font-weight: 700; border: none; cursor: pointer; border-radius: 999px;
   padding: 9px 16px; color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2));
   transition: filter 0.15s, transform 0.15s; }
@@ -66,7 +74,14 @@
 .tag { display: inline-block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
   padding: 3px 8px; border-radius: 999px; background: #EAF0FF; color: var(--accent); }
 .tag.pdf { background: #FCEEE6; color: var(--warn); }
+.tag.jogo { background: #EDE7FF; color: #6D43E0; }
 .sem-aulas { color: var(--muted); font-size: 0.9rem; padding: 10px 0; font-style: italic; }
+
+/* ---------- Jogos dentro do tema ---------- */
+.jogos-cab { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  padding: 10px 20px 0; font-weight: 800; font-size: 0.92rem; border-top: 1px solid #f0f3f9; }
+.jogos-cab small { font-weight: 500; color: var(--muted); font-size: 0.78rem; }
+.jogos-lista { padding-top: 4px; }
 
 /* switch publicado */
 .switch { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
@@ -88,6 +103,16 @@
 .estado-seg button[data-valor="preparacao"].sel { color: var(--accent2); }
 .estado-seg button[data-valor="publicado"].sel { color: var(--good); }
 .estado-seg button[data-valor="oculto"].sel { color: var(--muted); }
+
+/* ---------- Jogadores ---------- */
+.jogador-linha { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f3f9; }
+.jogador-linha:last-child { border-bottom: 0; }
+.jogador-info { flex: 1; min-width: 0; }
+.jogador-nome { font-weight: 700; font-size: 0.98rem; }
+.jogador-meta { color: var(--muted); font-size: 0.82rem; }
+.jogador-meta code { background: #eef2fa; border-radius: 6px; padding: 1px 6px; font-size: 0.8em; }
+.jogador-pts { font-weight: 800; color: var(--accent); font-size: 0.95rem; text-align: right; white-space: nowrap; }
+.jogador-pts small { display: block; font-weight: 500; color: var(--muted); font-size: 0.72rem; }
 
 /* ---------- Modal de formulário ---------- */
 .modal { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px;

@@ -147,6 +147,16 @@ export async function registrarPontuacao(jogoId, pontos) {
   return { atualizou: true, total };
 }
 
+// ---- admin ----
+
+// Aluno perdeu a senha: ninguém (nem o admin) consegue "ler" a senha atual,
+// pois só o hash é guardado. Esta função define uma nova.
+export async function redefinirSenha(slug, novaSenha) {
+  const salt = gerarSalt();
+  const senhaHash = await hash(salt, novaSenha);
+  await updateDoc(doc(db, COLECAO, slug), { senhaHash, salt, atualizadoEm: serverTimestamp() });
+}
+
 // ---- ranking ----
 
 export async function topRanking(limite = 12) {

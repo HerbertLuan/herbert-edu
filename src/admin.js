@@ -7,14 +7,22 @@ import { auth, db, storage, iniciarAnalytics } from "./firebase.js";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs, doc, setDoc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { redefinirSenha } from "./lib/jogadores.js";
 
 iniciarAnalytics();
 
 const $ = (s) => document.querySelector(s);
 const elLogin = $("#login"), elPainel = $("#painel"), elLista = $("#lista");
 const elLoginMsg = $("#login-msg"), btnEntrar = $("#btn-entrar"), elToast = $("#toast");
+const elListaJogadores = $("#lista-jogadores");
 
-let temas = [], aulas = [];
+let temas = [], aulas = [], jogos = [], jogadores = [];
+
+// Rótulo do formato do jogo, igual ao da vitrine (jogos.js).
+const ROTULO_FORMATO = {
+  quiz: "Quiz", sinais: "Sinais da Parábola", vf: "Verdadeiro ou falso",
+  grafico: "Qual é o gráfico?", pareamento: "Pareamento", erro: "Caça ao erro",
+};
 
 /* ---------- utilidades ---------- */
 const escapar = (t = "") => t.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -67,22 +75,33 @@ function entrarPainel(user) {
 /* ---------- Carregar dados ---------- */
 async function carregar() {
   elLista.innerHTML = `<div class="estado"><span class="emoji">⏳</span> Carregando…</div>`;
+  elListaJogadores.innerHTML = `<div class="estado"><span class="emoji">⏳</span> Carregando…</div>`;
   try {
-    const [ts, as] = await Promise.all([
+    const [ts, as, js, ps] = await Promise.all([
       getDocs(query(collection(db, "temas"), orderBy("ordem"))),
       getDocs(query(collection(db, "aulas"), orderBy("ordem"))),
+      getDocs(query(collection(db, "jogos"), orderBy("ordem"))),
+      getDocs(query(collection(db, "jogadores"), orderBy("total", "desc"))),
     ]);
     temas = ts.docs.map((d) => ({ id: d.id, ...d.data() }));
     aulas = as.docs.map((d) => ({ id: d.id, ...d.data() }));
+    jogos = js.docs.map((d) => ({ id: d.id, ...d.data() }));
+    jogadores = ps.docs.map((d) => ({ id: d.id, ...d.data() }));
     render();
+    renderJogadores();
   } catch (e) {
-    elLista.innerHTML = `<div class="estado"><span class="emoji">⚠️</span> Erro ao carregar: ${escapar(e.message || "")}</div>`;
+    const msg = `<div class="estado"><span class="emoji">⚠️</span> Erro ao carregar: ${escapar(e.message || "")}</div>`;
+    elLista.innerHTML = msg;
+    elListaJogadores.innerHTML = msg;
   }
 }
 
 /* ---------- Render ---------- */
 function aulasDoTema(temaId) {
   return aulas.filter((a) => a.temaId === temaId).sort((x, y) => (x.ordem ?? 0) - (y.ordem ?? 0));
+}
+function jogosDoTema(temaId) {
+  return jogos.filter((j) => j.temaId === temaId).sort((x, y) => (x.ordem ?? 0) - (y.ordem ?? 0));
 }
 function render() {
   if (!temas.length) {
@@ -93,6 +112,11 @@ function render() {
     const lista = aulasDoTema(t.id);
     const linhas = lista.length ? lista.map((a, j) => linhaAula(a, j, lista.length)).join("")
       : `<div class="sem-aulas">Sem materiais. Use “+ Aula”.</div>`;
+    const js = jogosDoTema(t.id);
+    const secaoJogos = js.length ? `
+        <div class="jogos-cab">🎮 Jogos <small>publique pra colocar no ar ou oculte pra tirar · novos jogos entram pelo script</small></div>
+        <div class="aulas-lista jogos-lista">${js.map((j, k) => linhaJogo(j, k, js.length)).join("")}</div>` : "";
+    const meta = `${lista.length} material(is)${js.length ? ` · ${js.length} jogo(s)` : ""}`;
     return `
       <div class="tema-bloco" data-tema="${t.id}">
         <div class="tema-cab">
@@ -101,7 +125,7 @@ function render() {
             <button data-acao="tema-baixo" ${i === temas.length - 1 ? "disabled" : ""}>▼</button>
           </div>
           <span class="tema-cor" style="background:${escapar(t.cor || "#2563EB")}"></span>
-          <div class="tema-nome">${escapar(t.titulo)}<small>${escapar(t.descricao || "sem descrição")} · ${lista.length} material(is)</small></div>
+          <div class="tema-nome">${escapar(t.titulo)}<small>${escapar(t.descricao || "sem descrição")} · ${meta}</small></div>
           <div class="tema-botoes">
             <button class="btn ghost mini" data-acao="add-aula">+ Aula</button>
             <button class="btn ghost mini" data-acao="tema-editar">Editar</button>
@@ -109,9 +133,40 @@ function render() {
           </div>
         </div>
         <div class="aulas-lista">${linhas}</div>
+        ${secaoJogos}
       </div>`;
   }).join("");
 }
+
+/* ---------- Jogadores ---------- */
+function dataDoc(ts) {
+  const data = ts?.toDate?.();
+  return data ? data.toLocaleDateString("pt-BR") : "";
+}
+function linhaJogador(j) {
+  const qtdJogos = Object.keys(j.melhores || {}).length;
+  const criado = dataDoc(j.criadoEm);
+  return `
+    <div class="jogador-linha" data-jogador="${j.id}">
+      <div class="jogador-info">
+        <div class="jogador-nome">${escapar(j.nome || j.id)}</div>
+        <div class="jogador-meta">login: <code>${escapar(j.nome || j.id)}</code>${criado ? ` · desde ${criado}` : ""}</div>
+      </div>
+      <div class="jogador-pts">${j.total ?? 0} pts<small>${qtdJogos} jogo(s)</small></div>
+      <div class="tema-botoes">
+        <button class="btn ghost mini" data-acao="jogador-senha">Redefinir senha</button>
+        <button class="btn perigo mini" data-acao="jogador-excluir">Excluir</button>
+      </div>
+    </div>`;
+}
+function renderJogadores() {
+  if (!jogadores.length) {
+    elListaJogadores.innerHTML = `<div class="estado"><span class="emoji">🎮</span> Nenhum jogador cadastrado ainda.</div>`;
+    return;
+  }
+  elListaJogadores.innerHTML = jogadores.map(linhaJogador).join("");
+}
+
 const estadoDe = (a) => a.estado || (a.publicado ? "publicado" : "oculto");
 function dataBR(iso) {
   if (!iso) return "";
@@ -139,8 +194,32 @@ function linhaAula(a, j, total) {
       </div>
       <div class="tema-botoes">
         <a class="btn ghost mini" href="${abrir}" target="_blank" rel="noopener">Abrir</a>
+        ${a.tipo !== "pdf" ? `<button class="btn ghost mini" data-acao="aula-exportar" title="Baixar o HTML para editar/enviar à IA e reimportar depois">⬇ HTML</button>` : ""}
         <button class="btn ghost mini" data-acao="aula-editar">Editar</button>
         <button class="btn perigo mini" data-acao="aula-excluir">Excluir</button>
+      </div>
+    </div>`;
+}
+
+function linhaJogo(j, k, total) {
+  const rotulo = ROTULO_FORMATO[j.formato] || "Jogo";
+  const est = estadoDe(j);
+  const seg = (val, label) => `<button data-acao="jogo-estado" data-valor="${val}" class="${est === val ? "sel" : ""}">${label}</button>`;
+  return `
+    <div class="aula-linha" data-jogo="${j.id}">
+      <div class="ordenadores">
+        <button data-acao="jogo-cima" ${k === 0 ? "disabled" : ""}>▲</button>
+        <button data-acao="jogo-baixo" ${k === total - 1 ? "disabled" : ""}>▼</button>
+      </div>
+      <div class="aula-info">
+        <div class="aula-nome"><span class="tag jogo">${escapar(rotulo)}</span> ${escapar(j.titulo)}</div>
+        <div class="aula-meta">${escapar(j.descricao || "")}</div>
+      </div>
+      <div class="estado-seg" title="Estado na vitrine de jogos">
+        ${seg("oculto", "Oculto")}${seg("preparacao", "Preparação")}${seg("publicado", "Publicado")}
+      </div>
+      <div class="tema-botoes">
+        <a class="btn ghost mini" href="/jogo.html?id=${encodeURIComponent(j.id)}" target="_blank" rel="noopener">Abrir</a>
       </div>
     </div>`;
 }
@@ -164,6 +243,7 @@ elLista.addEventListener("click", async (e) => {
   if (!acao) return;
   const temaId = e.target.closest("[data-tema]")?.dataset.tema;
   const aulaId = e.target.closest("[data-aula]")?.dataset.aula;
+  const jogoId = e.target.closest("[data-jogo]")?.dataset.jogo;
   try {
     if (acao === "tema-cima") await mover("temas", temas, temaId, -1);
     if (acao === "tema-baixo") await mover("temas", temas, temaId, +1);
@@ -173,10 +253,63 @@ elLista.addEventListener("click", async (e) => {
     if (acao === "aula-cima") await mover("aulas", aulasDoTema(temaId), aulaId, -1);
     if (acao === "aula-baixo") await mover("aulas", aulasDoTema(temaId), aulaId, +1);
     if (acao === "aula-editar") abrirModalAula(aulas.find((a) => a.id === aulaId));
+    if (acao === "aula-exportar") await exportarAula(aulaId);
     if (acao === "aula-excluir") await excluirAula(aulaId);
     if (acao === "estado") await mudarEstado(aulaId, alvo.dataset.valor);
+    if (acao === "jogo-cima") await mover("jogos", jogosDoTema(temaId), jogoId, -1);
+    if (acao === "jogo-baixo") await mover("jogos", jogosDoTema(temaId), jogoId, +1);
+    if (acao === "jogo-estado") await mudarEstadoJogo(jogoId, alvo.dataset.valor);
   } catch (err) { toast(err.message || "Erro", "erro"); }
 });
+
+async function mudarEstadoJogo(id, estado) {
+  await updateDoc(doc(db, "jogos", id), { estado, publicado: estado === "publicado" });
+  toast(estado === "publicado" ? "Jogo no ar"
+    : estado === "preparacao" ? "Jogo marcado como “em preparação”" : "Jogo tirado do ar");
+  await carregar();
+}
+
+/* ---------- Jogadores: ações ---------- */
+elListaJogadores.addEventListener("click", async (e) => {
+  const alvo = e.target.closest("[data-acao]");
+  const acao = alvo?.dataset.acao;
+  if (!acao) return;
+  const slug = e.target.closest("[data-jogador]")?.dataset.jogador;
+  const jogador = jogadores.find((j) => j.id === slug);
+  try {
+    if (acao === "jogador-excluir") await excluirJogador(jogador);
+    if (acao === "jogador-senha") abrirModalSenha(jogador);
+  } catch (err) { toast(err.message || "Erro", "erro"); }
+});
+
+async function excluirJogador(j) {
+  if (!confirm(`Excluir a conta de "${j.nome}" (${j.total ?? 0} pts)? Isso remove o jogador do ranking. Esta ação não pode ser desfeita.`)) return;
+  await deleteDoc(doc(db, "jogadores", j.id));
+  toast("Jogador excluído"); await carregar();
+}
+
+function abrirModalSenha(j) {
+  const m = abrirModal(`
+    <h3>Redefinir senha — ${escapar(j.nome)}</h3>
+    <p class="ajuda">A senha atual é guardada criptografada e não pode ser recuperada. Defina uma nova senha e avise o aluno por fora (WhatsApp etc.).</p>
+    <div class="campo"><label>Nova senha</label><input type="text" id="s-senha" placeholder="Mínimo 4 caracteres" autocomplete="off"></div>
+    <div class="modal-erro" id="s-erro"></div>
+    <div class="modal-acoes">
+      <button class="btn ghost" data-fechar>Cancelar</button>
+      <button class="btn" id="s-salvar">Salvar</button>
+    </div>`);
+  m.querySelector("[data-fechar]").onclick = () => m.remove();
+  m.querySelector("#s-salvar").onclick = async () => {
+    const senha = m.querySelector("#s-senha").value;
+    const erro = m.querySelector("#s-erro");
+    if (senha.length < 4) return (erro.textContent = "A senha precisa de ao menos 4 caracteres.");
+    const btn = m.querySelector("#s-salvar"); btn.disabled = true; erro.textContent = "";
+    try {
+      await redefinirSenha(j.id, senha);
+      m.remove(); toast("Senha redefinida");
+    } catch (err) { btn.disabled = false; erro.textContent = err.message || "Erro ao salvar."; }
+  };
+}
 
 async function mudarEstado(id, estado) {
   await updateDoc(doc(db, "aulas", id), { estado, publicado: estado === "publicado" });
@@ -185,6 +318,15 @@ async function mudarEstado(id, estado) {
   await carregar();
 }
 $("#btn-novo-tema").addEventListener("click", () => abrirModalTema(null));
+
+/* ---------- Abas ---------- */
+document.querySelectorAll(".aba").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".aba").forEach((b) => b.classList.toggle("sel", b === btn));
+    $("#vista-conteudo").hidden = btn.dataset.aba !== "conteudo";
+    $("#vista-jogadores").hidden = btn.dataset.aba !== "jogadores";
+  });
+});
 
 /* ---------- Modal genérico ---------- */
 function abrirModal(html) {
@@ -302,6 +444,29 @@ function abrirModalAula(aula, temaIdInicial) {
       m.remove(); toast("Material salvo"); await carregar();
     } catch (err) { btn.disabled = false; erro.textContent = err.message || "Erro ao salvar."; }
   };
+}
+
+// Baixa o HTML da aula para o computador (para editar/enviar à IA e reimportar
+// depois pelo "Editar"). Usa fetch + blob: o bucket libera GET via CORS.
+async function exportarAula(id) {
+  const a = aulas.find((x) => x.id === id);
+  if (!a || !a.arquivoUrl) return toast("Aula sem arquivo para exportar.", "erro");
+  try {
+    const resp = await fetch(a.arquivoUrl, { cache: "no-cache" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${id}.html`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    toast("HTML exportado");
+  } catch (err) {
+    toast("Falha ao exportar: " + (err.message || err), "erro");
+  }
 }
 
 async function excluirAula(id) {

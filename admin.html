@@ -37,13 +37,30 @@
     </header>
 
     <main class="painel-main wrap">
-      <div class="barra-topo">
-        <h2>Temas e materiais</h2>
-        <button id="btn-novo-tema" class="btn">+ Novo tema</button>
+      <div class="abas">
+        <button class="aba sel" data-aba="conteudo">📚 Temas e materiais</button>
+        <button class="aba" data-aba="jogadores">🎮 Jogadores</button>
       </div>
-      <p class="dica">Reordene com ▲▼. Alterne <b>publicado</b> para mostrar/ocultar na home. As mudanças vão direto para o site.</p>
-      <div id="lista" class="lista">
-        <div class="estado"><span class="emoji">⏳</span> Carregando…</div>
+
+      <div id="vista-conteudo" class="vista">
+        <div class="barra-topo">
+          <h2>Temas e materiais</h2>
+          <button id="btn-novo-tema" class="btn">+ Novo tema</button>
+        </div>
+        <p class="dica">Reordene com ▲▼. Alterne o estado (<b>Publicado</b> / Preparação / Oculto) para colocar materiais e jogos no ar ou tirá-los. As mudanças vão direto para o site.</p>
+        <div id="lista" class="lista">
+          <div class="estado"><span class="emoji">⏳</span> Carregando…</div>
+        </div>
+      </div>
+
+      <div id="vista-jogadores" class="vista" hidden>
+        <div class="barra-topo">
+          <h2>Jogadores</h2>
+        </div>
+        <p class="dica">O <b>login</b> é o nome que o aluno digitou. A senha é guardada criptografada — ninguém consegue "ver" a senha original, mas você pode <b>redefinir</b> se o aluno esquecer. <b>Excluir</b> remove a conta e tira o jogador do ranking.</p>
+        <div id="lista-jogadores" class="lista">
+          <div class="estado"><span class="emoji">⏳</span> Carregando…</div>
+        </div>
       </div>
     </main>
   </div>

@@ -33,6 +33,9 @@ service cloud.firestore {
     match /jogadores/{slug} {
       allow read: if true;
 
+      // Admin: gerencia contas no painel (excluir, redefinir senha).
+      allow delete: if ehAdmin();
+
       // Cadastro: só campos bem formados, total começando em 0+.
       allow create: if request.resource.data.nome is string
         && request.resource.data.nome.size() > 0
@@ -43,12 +46,15 @@ service cloud.firestore {
         && request.resource.data.total >= 0;
 
       // Atualização (nova pontuação): credencial e nome não mudam.
-      allow update: if request.resource.data.senhaHash == resource.data.senhaHash
+      // Admin pode redefinir a senha (aluno esqueceu) sem essa restrição.
+      allow update: if ehAdmin() || (
+        request.resource.data.senhaHash == resource.data.senhaHash
         && request.resource.data.salt == resource.data.salt
         && request.resource.data.nome == resource.data.nome
         && request.resource.data.melhores is map
         && request.resource.data.total is number
-        && request.resource.data.total >= 0;
+        && request.resource.data.total >= 0
+      );
     }
 
     // Tudo o que não foi declarado fica bloqueado por padrão.

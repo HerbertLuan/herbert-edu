@@ -503,6 +503,110 @@ body:has(.aula[data-modo="apresentacao"]),
   </div>
 </section>
 
+<!-- EXTRA 1 — Raízes sem Bhaskara: Soma e Produto -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">SEM BHASKARA</span><h2>Raízes pela Soma e Produto</h2></div>
+  <p class="lead">Quando as raízes são “bonitas” (inteiras), dá pra achar de cabeça — sem Δ e sem fórmula.</p>
+  <div class="grid g2">
+    <div class="card center" style="text-align:center">
+      <h3 class="accent">Soma das raízes</h3>
+      <p class="boxform">x₁ + x₂ = −b / a</p>
+    </div>
+    <div class="card center" style="text-align:center">
+      <h3 class="accent2">Produto das raízes</h3>
+      <p class="boxform" style="background:#F1EAFF;border-color:#e0cdff">x₁ · x₂ = c / a</p>
+    </div>
+  </div>
+  <div class="card flat"><p><b>Relações de Girard.</b> Com <b>a = 1</b> fica direto: procure <b>dois números que somam −b e multiplicam c</b>. Esses números <i>são</i> as raízes.</p></div>
+</section>
+
+<!-- EXTRA 2 — Receita mental + jogo de sinais -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">RECEITA MENTAL</span><h2>Como achar os dois números</h2></div>
+  <div class="splitfill">
+    <div class="col" style="flex:1.05">
+      <div class="step"><div class="n">1</div><div>Escreva <b>S = −b</b> (soma) e <b>P = c</b> (produto).</div></div>
+      <div class="step"><div class="n">2</div><div>Liste os <b>pares que multiplicam P</b>.</div></div>
+      <div class="step"><div class="n">3</div><div>Pegue o par que <b>soma S</b> → são as raízes.</div></div>
+      <div class="card flat"><p><b>Ex.:</b> x² − 5x + 6 → S = 5, P = 6 → pares de 6: (1,6), (2,3) → (2,3) soma 5 ✓ → <b>x = 2</b> e <b>x = 3</b>.</p></div>
+      <div class="card flat"><p>Confere com a aula: x² − 6x + 8 → S = 6, P = 8 → (2,4) → <b>x = 2</b> e <b>x = 4</b> — o mesmo que deu no Bhaskara!</p></div>
+    </div>
+    <div class="col">
+      <h3>Jogo de sinais</h3>
+      <div class="card"><p><b class="good">P &gt; 0</b> → raízes de <b>mesmo sinal</b>.<br><span class="muted">S &gt; 0: ambas positivas · S &lt; 0: ambas negativas.</span></p></div>
+      <div class="card"><p><b class="warn">P &lt; 0</b> → raízes de <b>sinais opostos</b>.<br><span class="muted">A de maior módulo leva o sinal de S.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXTRA 3 — Treinador interativo (soma e produto) -->
+<section class="slide">
+  <div class="titlebar"><span class="kicker">INTERATIVO · TREINO</span><h2>Treine: ache as raízes de cabeça</h2></div>
+  <p class="muted">Use só soma e produto. Digite as duas raízes (em qualquer ordem) e verifique.</p>
+  <div id="treino-sp" class="card" style="padding:24px 28px;text-align:center">
+    <p id="tsp-eq" class="formula" style="font-size:1.6em;margin:6px 0 4px"></p>
+    <p id="tsp-sp" class="figcap" style="font-size:1em;margin-bottom:18px"></p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center">
+      <input id="tsp-r1" type="number" inputmode="numeric" placeholder="raiz 1" aria-label="primeira raiz" style="width:130px;padding:14px;border:2px solid var(--line);border-radius:12px;font-size:1.1em;font-family:Georgia,serif;text-align:center">
+      <input id="tsp-r2" type="number" inputmode="numeric" placeholder="raiz 2" aria-label="segunda raiz" style="width:130px;padding:14px;border:2px solid var(--line);border-radius:12px;font-size:1.1em;font-family:Georgia,serif;text-align:center">
+      <button id="tsp-check" class="btn" style="border:none;cursor:pointer">Verificar</button>
+      <button id="tsp-new" class="btn ghost" style="border:none;cursor:pointer">Nova ↻</button>
+    </div>
+    <p id="tsp-fb" class="feedback" style="text-align:center"></p>
+    <p id="tsp-score" class="figcap" style="font-size:.95em"></p>
+  </div>
+</section>
+<script>
+/* Treinador de raízes por soma e produto — exclusivo desta aula (não usa o motor). */
+(function () {
+  var box = document.getElementById("treino-sp");
+  if (!box) return;
+  var eq = document.getElementById("tsp-eq"), sp = document.getElementById("tsp-sp"),
+      r1 = document.getElementById("tsp-r1"), r2 = document.getElementById("tsp-r2"),
+      fb = document.getElementById("tsp-fb"), score = document.getElementById("tsp-score"),
+      bCheck = document.getElementById("tsp-check"), bNew = document.getElementById("tsp-new");
+  var alvo = [], acertos = 0, sequencia = 0;
+  function rint(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+  function termo(coef, simb) {
+    if (coef === 0) return "";
+    var n = Math.abs(coef);
+    return (coef < 0 ? " − " : " + ") + (n === 1 && simb ? "" : n) + simb;
+  }
+  function sorteia() {
+    var a, b;
+    do { a = rint(-8, 8); b = rint(-8, 8); } while (a === 0 && b === 0);
+    alvo = [a, b];
+    var B = -(a + b), C = a * b;
+    eq.innerHTML = "f(x) = x²" + termo(B, "x") + (termo(C, "") || " + 0");
+    sp.textContent = "Soma = " + (-B) + "   ·   Produto = " + C;
+    r1.value = ""; r2.value = ""; fb.textContent = ""; fb.className = "feedback";
+    r1.focus();
+  }
+  function verifica() {
+    var v1 = r1.value.trim(), v2 = r2.value.trim();
+    if (v1 === "" || v2 === "") {
+      fb.innerHTML = '<span class="warn">Digite as duas raízes.</span>'; return;
+    }
+    var x1 = Number(v1), x2 = Number(v2);
+    var ok = (x1 === alvo[0] && x2 === alvo[1]) || (x1 === alvo[1] && x2 === alvo[0]);
+    if (ok) {
+      acertos++; sequencia++;
+      fb.innerHTML = '<span class="good">Certo! ✓ Soma ' + (x1 + x2) + ' e produto ' + (x1 * x2) + '.</span>';
+    } else {
+      sequencia = 0;
+      fb.innerHTML = '<span class="warn">Ainda não — as raízes são ' + alvo[0] + ' e ' + alvo[1] + '.</span>';
+    }
+    score.textContent = "Acertos: " + acertos + "   ·   Sequência: " + sequencia;
+  }
+  bCheck.addEventListener("click", verifica);
+  bNew.addEventListener("click", sorteia);
+  [r1, r2].forEach(function (i) {
+    i.addEventListener("keydown", function (e) { if (e.key === "Enter") verifica(); });
+  });
+  sorteia();
+})();
+</script>
+
 <!-- 15 — Encerramento -->
 <section class="slide center">
   <span class="eyebrow">Encerramento · Aula 2</span>
