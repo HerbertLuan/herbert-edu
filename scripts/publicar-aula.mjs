@@ -162,21 +162,21 @@ async function cmdAula(a) {
 // Valida o envelope JSON de um jogo antes de publicar. Devolve uma mensagem
 // de erro (string) se algo estiver errado, ou null se estiver tudo certo.
 function validarJogo(dados) {
-  const formatosOk = ["quiz", "sinais", "vf", "grafico", "pareamento", "erro"];
+  const formatosOk = ["quiz", "sinais", "torre", "vf", "grafico", "pareamento", "erro"];
   if (!dados || typeof dados !== "object") return "JSON vazio ou não é um objeto.";
   if (!formatosOk.includes(dados.formato)) {
     return `campo "formato" ausente ou desconhecido (use: ${formatosOk.join(", ")}).`;
   }
-  // "sinais" é procedural: o envelope é só configuração, sem questões.
-  if (dados.formato === "sinais") {
+  // "sinais" e "torre" são procedurais: o envelope é só configuração, sem questões.
+  if (dados.formato === "sinais" || dados.formato === "torre") {
     if (typeof dados.titulo !== "string" || !dados.titulo.trim()) {
-      return 'o jogo "sinais" precisa de um "titulo" não vazio.';
+      return `o jogo "${dados.formato}" precisa de um "titulo" não vazio.`;
     }
     if (dados.duracao !== undefined && (!Number.isInteger(dados.duracao) || dados.duracao <= 0)) {
       return '"duracao" deve ser um inteiro positivo (segundos).';
     }
     if (dados.questoes !== undefined) {
-      console.warn('⚠️  Aviso: "questoes" é ignorado no formato "sinais" (as cartas são geradas na hora).');
+      console.warn(`⚠️  Aviso: "questoes" é ignorado no formato "${dados.formato}" (as cartas são geradas na hora).`);
     }
   }
   // Os formatos vf/grafico/pareamento/erro ficam reservados.

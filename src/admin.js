@@ -20,8 +20,9 @@ let temas = [], aulas = [], jogos = [], jogadores = [];
 
 // Rótulo do formato do jogo, igual ao da vitrine (jogos.js).
 const ROTULO_FORMATO = {
-  quiz: "Quiz", sinais: "Sinais da Parábola", vf: "Verdadeiro ou falso",
-  grafico: "Qual é o gráfico?", pareamento: "Pareamento", erro: "Caça ao erro",
+  quiz: "Quiz", sinais: "Sinais da Parábola", torre: "Torre do Logaritmo",
+  vf: "Verdadeiro ou falso", grafico: "Qual é o gráfico?",
+  pareamento: "Pareamento", erro: "Caça ao erro",
 };
 
 /* ---------- utilidades ---------- */

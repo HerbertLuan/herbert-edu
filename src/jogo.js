@@ -4,12 +4,13 @@ import { doc, getDoc } from "firebase/firestore";
 import { db, iniciarAnalytics } from "./firebase.js";
 import { iniciarQuiz } from "./lib/quiz.js";
 import { iniciarSinais } from "./lib/sinais.js";
+import { iniciarTorre } from "./lib/torre.js";
 import { registrarPontuacao } from "./lib/jogadores.js";
 
 iniciarAnalytics();
 
 // Um motor por formato de envelope; formatos novos entram aqui.
-const MOTORES = { quiz: iniciarQuiz, sinais: iniciarSinais };
+const MOTORES = { quiz: iniciarQuiz, sinais: iniciarSinais, torre: iniciarTorre };
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
@@ -88,15 +89,16 @@ async function carregar() {
   });
 }
 
-// Modo demo (só em dev): jogo.html?demo=sinais roda o motor com um envelope
-// local, sem Firestore — útil pra testar antes de publicar. O bloco inteiro
-// morre no build de produção (import.meta.env.DEV vira false).
+// Modo demo (só em dev): jogo.html?demo=sinais (ou ?demo=torre) roda o motor
+// com um envelope mínimo, sem Firestore — útil pra testar antes de publicar.
+// Cada motor usa seu próprio título/duração padrão. O bloco inteiro morre no
+// build de produção (import.meta.env.DEV vira false).
 const demo = params.get("demo");
 if (import.meta.env.DEV && demo && MOTORES[demo]) {
   document.title = `Demo ${demo} · Herbert Edu`;
   MOTORES[demo]({
     container: palco,
-    dados: { formato: demo, titulo: `Sinais da Parábola (demo)`, duracao: 45 },
+    dados: { formato: demo },
     jogoId: `demo-${demo}`,
     aoTerminar: (resultado) => console.log("[demo] aoTerminar:", resultado),
   });

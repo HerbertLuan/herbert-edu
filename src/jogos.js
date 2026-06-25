@@ -26,7 +26,8 @@ function estadoDe(jogo) {
 }
 
 const ROTULO_FORMATO = {
-  quiz: "Quiz", vf: "Verdadeiro ou falso", grafico: "Qual é o gráfico?",
+  quiz: "Quiz", sinais: "Sinais da Parábola", torre: "Torre do Logaritmo",
+  vf: "Verdadeiro ou falso", grafico: "Qual é o gráfico?",
   pareamento: "Pareamento", erro: "Caça ao erro",
 };
 

@@ -1,0 +1,309 @@
+/* =====================================================================
+   HERBERT EDU — Motor "Torre do Logaritmo" (estilos)
+   Paleta herdada do site; o fundo esquenta com o nível de combo
+   (azul → roxo → laranja → dourado). A torre cresce com os acertos.
+   ===================================================================== */
+.tor-app {
+  --t-accent: #2563EB;
+  --t-accent2: #7C3AED;
+  --t-ink: #16223A;
+  --t-muted: #5A6B86;
+  --t-line: #DCE3EE;
+  --t-good: #137a4b;
+  --t-good-bg: #E6F6EE;
+  --t-bad: #C0392B;
+  --t-bad-bg: #FBEAE8;
+  --t-gold: #F59E0B;
+
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--t-ink);
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 18px 16px 40px;
+  position: relative;
+}
+
+.tor-tela { animation: tor-aparece 0.25s ease; }
+@keyframes tor-aparece { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.tor-eyebrow {
+  display: inline-block;
+  font-size: 0.78rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--t-accent), var(--t-accent2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* ---------- fundo vivo (esquenta com o combo) ---------- */
+.tor-fundo {
+  position: fixed; inset: 0; z-index: -1;
+  transition: background 0.6s ease;
+}
+.tor-fundo.nivel-1 { background: linear-gradient(170deg, #DCE9FF 0%, #F7F9FC 60%); }
+.tor-fundo.nivel-2 { background: linear-gradient(170deg, #E5DBFF 0%, #F3EFFD 60%); }
+.tor-fundo.nivel-3 { background: linear-gradient(170deg, #FFD9B3 0%, #FFF1E3 60%); }
+.tor-fundo.nivel-4 { background: linear-gradient(170deg, #FFD978 0%, #FFF3D2 60%); }
+
+/* ---------- abertura ---------- */
+.tor-abertura { text-align: center; padding-top: 16px; }
+.tor-titulo { font-size: clamp(1.5rem, 5vw, 2.1rem); font-weight: 800; letter-spacing: -0.5px; margin: 8px 0 18px; }
+.tor-regras { list-style: none; padding: 0; margin: 0 auto 18px; max-width: 360px; display: grid; gap: 8px; }
+.tor-regras li {
+  background: #F2F6FF; border: 1px solid var(--t-line); border-radius: 12px;
+  padding: 10px 14px; color: var(--t-muted); font-size: 0.98rem; text-align: left;
+}
+.tor-regras li b { color: var(--t-ink); }
+.tor-melhor { color: #B9851A; font-weight: 700; margin-bottom: 18px; }
+
+/* ---------- botões genéricos ---------- */
+.tor-btn {
+  display: inline-block; font-family: inherit; font-size: 1rem; font-weight: 800;
+  border: 1.5px solid var(--t-line); background: #fff; color: var(--t-ink);
+  border-radius: 999px; padding: 12px 26px; cursor: pointer; text-align: center;
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+.tor-btn:hover { transform: translateY(-2px); }
+.tor-btn-primario {
+  border: none; color: #fff;
+  background: linear-gradient(135deg, var(--t-accent), var(--t-accent2));
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.28);
+}
+
+/* ---------- HUD ---------- */
+.tor-hud {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-bottom: 14px;
+}
+.tor-relogio { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+.tor-seg { font-size: 1.25rem; font-weight: 800; min-width: 32px; text-align: right; transition: color 0.2s; }
+.tor-rel-barra {
+  flex: 1; height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--t-line); overflow: hidden; min-width: 60px;
+}
+.tor-rel-barra i {
+  display: block; height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--t-accent), var(--t-accent2));
+  transition: width 0.1s linear;
+}
+.tor-relogio.baixo .tor-seg { color: var(--t-bad); animation: tor-pulsa 0.7s ease infinite; }
+.tor-relogio.baixo .tor-rel-barra i { background: var(--t-bad); }
+.tor-relogio.penal .tor-seg { color: var(--t-bad); transform: scale(1.25); }
+@keyframes tor-pulsa { 50% { transform: scale(1.12); } }
+
+.tor-combo {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 12px; border-radius: 999px; background: #fff;
+  border: 1.5px solid var(--t-line); transition: border-color 0.3s, box-shadow 0.3s;
+}
+.tor-mult { font-weight: 800; font-size: 1.02rem; }
+.tor-nivel-nome { font-size: 0.78rem; font-weight: 700; color: var(--t-muted); }
+.tor-combo.nivel-2 { border-color: var(--t-accent2); }
+.tor-combo.nivel-2 .tor-mult { color: var(--t-accent2); }
+.tor-combo.nivel-3 { border-color: #EA7317; box-shadow: 0 0 12px rgba(234, 115, 23, 0.3); }
+.tor-combo.nivel-3 .tor-mult { color: #EA7317; }
+.tor-combo.nivel-4 { border-color: var(--t-gold); box-shadow: 0 0 16px rgba(245, 158, 11, 0.45); }
+.tor-combo.nivel-4 .tor-mult { color: #B9851A; }
+
+.tor-pontos { font-size: 0.95rem; font-weight: 800; color: var(--t-accent); white-space: nowrap; }
+
+/* ---------- arena: torre + carta ---------- */
+.tor-arena {
+  display: grid; grid-template-columns: 84px 1fr; align-items: stretch; gap: 14px;
+  min-height: 360px;
+}
+
+/* ---------- torre que cresce ---------- */
+.tor-torre { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.tor-contador { font-weight: 800; font-size: 0.95rem; color: var(--t-ink); white-space: nowrap; }
+.tor-contador b { color: var(--t-accent); }
+.tor-predio {
+  flex: 1; width: 100%;
+  display: flex; flex-direction: column-reverse; justify-content: flex-start;
+  align-items: center; gap: 3px; overflow: hidden;
+  border-bottom: 3px solid var(--t-line);
+}
+.tor-andar {
+  width: 100%; height: 20px; border-radius: 5px 5px 2px 2px;
+  background: linear-gradient(180deg, #9DBDF6, #6E97E8);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.08);
+}
+.tor-andar.n2 { background: linear-gradient(180deg, #C3AEF6, #9B79E6); }
+.tor-andar.n3 { background: linear-gradient(180deg, #F7B27A, #EC8B3B); }
+.tor-andar.n4 { background: linear-gradient(180deg, #FFD06B, #F1A81C); }
+.tor-andar.nova { animation: tor-sobe 0.32s cubic-bezier(0.2, 1.4, 0.4, 1); }
+@keyframes tor-sobe {
+  from { opacity: 0; transform: translateY(14px) scaleY(0.4); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- carta ---------- */
+.tor-carta-area { position: relative; }
+.tor-carta {
+  background: #fff; border-radius: 20px; padding: 16px 14px 14px;
+  border: 3px solid var(--t-line);
+  box-shadow: 0 14px 36px rgba(22, 34, 58, 0.16);
+  animation: tor-entra 0.22s ease;
+}
+@keyframes tor-entra { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+
+.tor-pergunta {
+  font-size: clamp(1.6rem, 7vw, 2.1rem); font-weight: 800; text-align: center;
+  margin: 6px 0 16px; letter-spacing: -0.5px;
+}
+.tor-pergunta sub { font-size: 0.55em; font-weight: 700; }
+.tor-pergunta sup { font-size: 0.6em; }
+
+.tor-opcoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tor-opcao {
+  display: flex; align-items: center; gap: 10px;
+  font-family: inherit; font-size: 1.15rem; font-weight: 800;
+  border: 2px solid var(--t-line); background: #fff; color: var(--t-ink);
+  border-radius: 14px; padding: 14px 12px; cursor: pointer; text-align: left;
+  transition: border-color 0.12s, transform 0.08s, background 0.12s;
+}
+.tor-opcao:hover { border-color: var(--t-accent); }
+.tor-opcao:active { transform: scale(0.97); }
+.tor-letra {
+  flex: 0 0 auto; width: 24px; height: 24px; border-radius: 7px;
+  display: grid; place-items: center;
+  font-size: 0.82rem; background: #EEF3FF; color: var(--t-muted);
+}
+.tor-opcao.certa {
+  border-color: var(--t-good); background: var(--t-good-bg); color: var(--t-good);
+}
+.tor-opcao.certa .tor-letra { background: var(--t-good); color: #fff; }
+.tor-opcao.errada {
+  border-color: var(--t-bad); background: var(--t-bad-bg); color: var(--t-bad);
+}
+.tor-opcao:disabled { cursor: default; }
+
+/* janela por carta (combo alto / relâmpago) */
+.tor-janela {
+  height: 6px; border-radius: 99px; background: #EDF1F8; margin-top: 12px; overflow: hidden;
+}
+.tor-janela i {
+  display: block; height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, #EA7317, var(--t-gold));
+  transition: width 0.1s linear;
+}
+
+/* ---------- carta relâmpago ---------- */
+.tor-carta-banner {
+  text-align: center; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.5px;
+  border-radius: 10px; padding: 5px 8px; margin-bottom: 10px; color: #fff;
+  background: linear-gradient(120deg, #EA7317, var(--t-gold));
+}
+.tor-carta.relampago {
+  border-color: var(--t-gold); background: #FFFBEE;
+  animation: tor-brilha 0.9s ease infinite;
+}
+.tor-carta.relampago .tor-janela i { background: linear-gradient(90deg, var(--t-gold), #FFD978); }
+@keyframes tor-brilha {
+  0%, 100% { box-shadow: 0 14px 36px rgba(245, 158, 11, 0.35); }
+  50% { box-shadow: 0 14px 48px rgba(245, 158, 11, 0.65); }
+}
+
+/* flash de erro na tela inteira */
+.tor-jogo.flash-erro::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 5;
+  box-shadow: inset 0 0 0 6px rgba(192, 57, 43, 0.55), inset 0 0 60px rgba(192, 57, 43, 0.3);
+  animation: tor-flash 0.45s ease forwards;
+}
+@keyframes tor-flash { from { opacity: 1; } to { opacity: 0; } }
+
+/* +N flutuante */
+.tor-flutua {
+  position: absolute; left: 50%; top: 6%; z-index: 6;
+  transform: translateX(-50%);
+  font-size: 1.7rem; font-weight: 800; color: var(--t-good);
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  animation: tor-flutua 0.75s ease forwards;
+}
+@keyframes tor-flutua {
+  from { opacity: 0; transform: translate(-50%, 8px) scale(0.8); }
+  25% { opacity: 1; }
+  to { opacity: 0; transform: translate(-50%, -42px) scale(1.15); }
+}
+
+/* banner COMBO ×N */
+.tor-banner {
+  position: fixed; left: 50%; top: 34%; z-index: 7;
+  transform: translate(-50%, -50%);
+  display: grid; justify-items: center; gap: 2px;
+  font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; color: #fff;
+  background: linear-gradient(135deg, var(--t-accent2), var(--t-gold));
+  border-radius: 18px; padding: 14px 28px;
+  box-shadow: 0 16px 44px rgba(124, 58, 237, 0.4);
+  pointer-events: none;
+  animation: tor-banner 0.95s ease forwards;
+}
+.tor-banner b { font-size: 2rem; }
+.tor-banner small { font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.9; }
+@keyframes tor-banner {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  18% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+  80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -56%) scale(0.95); }
+}
+
+/* ---------- toast pedagógico ---------- */
+.tor-toast {
+  position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%);
+  width: min(88vw, 480px); z-index: 8;
+  background: var(--t-ink); color: #fff; border-radius: 14px;
+  padding: 11px 16px; font-size: 0.95rem; font-weight: 600; line-height: 1.45;
+  box-shadow: 0 12px 30px rgba(22, 34, 58, 0.35);
+  animation: tor-toast-entra 0.2s ease;
+  transition: opacity 0.3s ease;
+}
+.tor-toast.some { opacity: 0; }
+.tor-toast sub { font-size: 0.7em; }
+.tor-toast sup { font-size: 0.75em; }
+@keyframes tor-toast-entra { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translateX(-50%); } }
+
+/* ---------- tela final ---------- */
+.tor-final { text-align: center; padding-top: 12px; }
+.tor-placar {
+  font-size: clamp(3rem, 12vw, 4.5rem); font-weight: 800; letter-spacing: -2px; line-height: 1;
+  margin: 10px 0 6px; color: #B9851A;
+}
+.tor-placar small { font-size: 1.1rem; font-weight: 700; color: var(--t-muted); margin-left: 6px; letter-spacing: 0; }
+.tor-altura { color: var(--t-muted); font-weight: 600; margin: 0 0 16px; }
+.tor-altura b { color: var(--t-accent); }
+.tor-stats { display: flex; justify-content: center; gap: 10px; margin: 0 0 20px; flex-wrap: wrap; }
+.tor-stats > div {
+  background: #F2F6FF; border: 1px solid var(--t-line); border-radius: 14px;
+  padding: 12px 14px; min-width: 84px;
+}
+.tor-stats b { display: block; font-size: 1.3rem; font-weight: 800; }
+.tor-stats span { font-size: 0.82rem; color: var(--t-muted); }
+.tor-acoes { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ---------- botão de som ---------- */
+.tor-som {
+  width: 38px; height: 38px; flex: 0 0 auto;
+  font-size: 1.05rem; line-height: 1;
+  background: #fff; border: 1.5px solid var(--t-line); border-radius: 50%;
+  cursor: pointer; padding: 0;
+  transition: border-color 0.12s, transform 0.08s;
+}
+.tor-som:hover { border-color: var(--t-accent); }
+.tor-som:active { transform: scale(0.94); }
+.tor-som-canto { position: absolute; top: 14px; right: 12px; }
+
+/* ---------- telas estreitas ---------- */
+@media (max-width: 420px) {
+  .tor-arena { grid-template-columns: 64px 1fr; gap: 10px; }
+  .tor-nivel-nome { display: none; }
+  .tor-opcao { font-size: 1.05rem; padding: 12px 10px; }
+}
+
+/* ---------- reduz movimento ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .tor-tela, .tor-carta, .tor-andar.nova, .tor-banner, .tor-toast, .tor-flutua,
+  .tor-carta.relampago { animation: none; }
+  .tor-fundo { transition: none; }
+  .tor-btn:hover { transform: none; }
+  .tor-relogio.baixo .tor-seg { animation: none; }
+}
